@@ -131,7 +131,6 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 	m_Lagging = false;
 	m_AutoSave = m_GHost->m_AutoSave;
 	m_MatchMaking = false;
-	m_LocalAdminMessages = m_GHost->m_LocalAdminMessages;
 
 	if( m_SaveGame )
 	{
@@ -1172,31 +1171,6 @@ void CBaseGame :: SendAllChat( unsigned char fromPID, string message )
 void CBaseGame :: SendAllChat( string message )
 {
 	SendAllChat( GetHostPID( ), message );
-}
-
-void CBaseGame :: SendLocalAdminChat( string message )
-{
-	if( !m_LocalAdminMessages )
-		return;
-
-	// send a message to LAN/local players who are admins
-	// at the time of this writing it is only possible for the game owner to meet this criteria because being an admin requires spoof checking
-	// this is mainly used for relaying battle.net whispers, chat messages, and emotes to these players
-
-	for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
-	{
-		if( (*i)->GetSpoofed( ) && IsOwner( (*i)->GetName( ) ) && ( UTIL_IsLanIP( (*i)->GetExternalIP( ) ) || UTIL_IsLocalIP( (*i)->GetExternalIP( ), m_GHost->m_LocalAddresses ) ) )
-		{
-			if( m_VirtualHostPID != 255 )
-				SendChat( m_VirtualHostPID, *i, message );
-			else
-			{
-				// make the chat message originate from the recipient since it's not going to be logged to the replay
-
-				SendChat( (*i)->GetPID( ), *i, message );
-			}
-		}
-	}
 }
 
 void CBaseGame :: SendAllSlotInfo( )
