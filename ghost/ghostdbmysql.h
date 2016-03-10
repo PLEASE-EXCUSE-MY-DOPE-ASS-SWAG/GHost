@@ -245,7 +245,7 @@ uint32_t MySQLW3MMDPlayerAdd( void *conn, string *error, uint32_t botid, string 
 bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gameid, map<VarP,int32_t> var_ints );
 bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gameid, map<VarP,double> var_reals );
 bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gameid, map<VarP,string> var_strings );
-bool MySQLGetPlayerId( void *conn, string *error, uint32_t botid, string user );
+uint32_t MySQLGetPlayerId( void *conn, string *error, uint32_t botid, string user );
 
 //
 // MySQL Callables
