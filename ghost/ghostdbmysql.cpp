@@ -1420,7 +1420,7 @@ void CMySQLCallableGetPlayerId :: operator( )( )
 	Init( );
 
 	if( m_Error.empty( ) )
-		m_Result = MySQLGetPlayerId( m_Connection, &m_Error, m_SQLBotID, m_Category, m_User );
+		m_Result = MySQLGetPlayerId( m_Connection, &m_Error, m_SQLBotID, m_User );
 
 	Close( );
 }
