@@ -31,12 +31,12 @@ endif
 
 OBJS = bncsutilinterface.o bnet.o bnetprotocol.o bnlsclient.o bnlsprotocol.o commandpacket.o config.o crc32.o game.o game_base.o gameplayer.o gameprotocol.o gameslot.o ghost.o ghostdb.o ghostdbmysql.o gpsprotocol.o language.o map.o packed.o replay.o savegame.o sha1.o socket.o stats.o statsdota.o statsw3mmd.o util.o
 COBJS = 
-PROGS = ./ghost++
+PROGS = ./ohs++
 
 all: $(OBJS) $(COBJS) $(PROGS)
 
-./ghost++: $(OBJS) $(COBJS)
-	$(C++) -o ./ghost++ $(OBJS) $(COBJS) $(LFLAGS)
+./ohs++: $(OBJS) $(COBJS)
+	$(C++) -o ./ohs++ $(OBJS) $(COBJS) $(LFLAGS)
 
 clean:
 	rm -f $(OBJS) $(COBJS) $(PROGS)
@@ -47,7 +47,7 @@ $(OBJS): %.o: %.cpp
 $(COBJS): %.o: %.c
 	$(CC) -o $@ $(CFLAGS) -c $<
 
-./ghost++: $(OBJS) $(COBJS)
+./ohs++: $(OBJS) $(COBJS)
 
 all: $(PROGS)
 
