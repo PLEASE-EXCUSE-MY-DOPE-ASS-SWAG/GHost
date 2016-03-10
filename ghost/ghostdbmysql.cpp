@@ -448,6 +448,19 @@ CCallableW3MMDVarAdd *CGHostDBMySQL :: ThreadedW3MMDVarAdd( uint32_t gameid, map
 	return Callable;
 }
 
+CCallableGetPlayerId *CGHostDBMySQL :: ThreadedGetPlayerId( string user )
+{
+	void *Connection = GetIdleConnection( );
+
+	if( !Connection )
+		m_NumConnections++;
+
+	CCallableGetPlayerId *Callable = new CMySQLCallableGetPlayerId( user, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
+	CreateThread( Callable );
+	m_OutstandingCallables++;
+	return Callable;
+}
+
 void *CGHostDBMySQL :: GetIdleConnection( )
 {
 	void *Connection = NULL;
@@ -1137,6 +1150,20 @@ bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gamei
 	return Success;
 }
 
+uint32_t MySQLGetPlayerId( void *conn, string *error, uint32_t botid, string user )
+{
+	transform( user.begin( ), user.end( ), user.begin( ), (int(*)(int))tolower );
+	uint32_t RowID = 0;
+	string Query = "SELECT id FROM oh_stats_players WHERE player_lower = '" + user + "'";
+
+	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+		*error = mysql_error( (MYSQL *)conn );
+	else
+		RowID = mysql_insert_id( (MYSQL *)conn );
+
+	return RowID;
+}
+
 //
 // MySQL Callables
 //
@@ -1384,6 +1411,16 @@ void CMySQLCallableW3MMDVarAdd :: operator( )( )
 		else
 			m_Result = MySQLW3MMDVarAdd( m_Connection, &m_Error, m_SQLBotID, m_GameID, m_VarStrings );
 	}
+
+	Close( );
+}
+
+void CMySQLCallableGetPlayerId :: operator( )( )
+{
+	Init( );
+
+	if( m_Error.empty( ) )
+		m_Result = MySQLGetPlayerId( m_Connection, &m_Error, m_SQLBotID, m_Category, m_User );
 
 	Close( );
 }

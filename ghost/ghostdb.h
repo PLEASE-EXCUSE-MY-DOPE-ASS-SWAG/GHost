@@ -46,6 +46,7 @@ class CCallableDownloadAdd;
 class CCallableScoreCheck;
 class CCallableW3MMDPlayerAdd;
 class CCallableW3MMDVarAdd;
+class CCallableGetPlayerId;
 class CDBBan;
 class CDBGame;
 class CDBGamePlayer;
@@ -100,6 +101,7 @@ public:
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,int32_t> var_ints );
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals );
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings );
+	virtual uint32_t GetPlayerId( string user );
 
 	// threaded database functions
 
@@ -127,6 +129,7 @@ public:
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,int32_t> var_ints );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings );
+	virtual CCallableGetPlayerId *ThreadedGetPlayerId( string user );
 };
 
 //
@@ -549,6 +552,20 @@ public:
 	CCallableW3MMDVarAdd( uint32_t nGameID, map<VarP,double> nVarReals ) : CBaseCallable( ), m_GameID( nGameID ), m_VarReals( nVarReals ), m_ValueType( VALUETYPE_REAL ), m_Result( false ) { }
 	CCallableW3MMDVarAdd( uint32_t nGameID, map<VarP,string> nVarStrings ) : CBaseCallable( ), m_GameID( nGameID ), m_VarStrings( nVarStrings ), m_ValueType( VALUETYPE_STRING ), m_Result( false ) { }
 	virtual ~CCallableW3MMDVarAdd( );
+
+	virtual bool GetResult( )				{ return m_Result; }
+	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+};
+
+class CCallableGetPlayerId : virtual public CBaseCallable
+{
+protected:
+	string m_User;
+	uint32_t m_Result;
+
+public:
+	CCallableGetPlayerId( string nUser ) : CBaseCallable( ), m_User(nUser), m_Result( 0 ) { }
+	virtual ~CCallableGetPlayerId( );
 
 	virtual bool GetResult( )				{ return m_Result; }
 	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
