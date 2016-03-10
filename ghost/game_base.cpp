@@ -410,7 +410,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
             if(id != 0){
                 SendChat(player, "Welcome back " + player->GetName() + "! Enjoy your stay and good luck for your game :-)");
             } else {
-                SendChat(player, "Welcome back to our system, please stand by! We shortly create an unique identifier for your.");
+                SendChat(player, "Hey you are new here! Please stand by, we shortly create an unique identifier for your.");
             }
 
 			m_GHost->m_DB->RecoverCallable( *i );
@@ -1966,7 +1966,7 @@ void CBaseGame :: EventPlayerJoined( CPotentialPlayer *potential, CIncomingJoinP
 	CONSOLE_Print( "[GAME: " + m_GameName + "] player [" + joinPlayer->GetName( ) + "|" + potential->GetExternalIPString( ) + "] joined the game" );
 	CGamePlayer *Player = new CGamePlayer( potential, m_SaveGame ? EnforcePID : GetNewPID( ), JoinedRealm, joinPlayer->GetName( ), joinPlayer->GetInternalIP( ), Reserved );
 
-    m_PairedGetPlayerIds.push_back(m_OHBot->m_DB->ThreadedGetPlayerId(Player->GetName()));
+    m_PairedGetPlayerIds.push_back(m_GHost->m_DB->ThreadedGetPlayerId(Player->GetName()));
     
 	// consider LAN players to have already spoof checked since they can't
 	// since so many people have trouble with this feature we now use the JoinedRealm to determine LAN status
