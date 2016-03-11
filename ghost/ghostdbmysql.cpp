@@ -34,6 +34,7 @@
 
 #include <mysql/mysql.h>
 #include <boost/thread.hpp>
+#include <initializer_list>
 
 //
 // CGHostDBMySQL

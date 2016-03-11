@@ -23,6 +23,8 @@
 #include "config.h"
 #include "ghostdb.h"
 
+#include <initializer_list>
+
 //
 // CGHostDB
 //
