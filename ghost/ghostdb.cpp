@@ -192,6 +192,21 @@ uint32_t CGHostDB :: CreatePlayerId( string user, string ip, string realm )
     return 0;
 }
 
+uint32_t CGHostDB :: GetGameId( )
+{
+    return 0;
+}
+
+vector<string, string> CGHostDB :: GetBotConfigs( )
+{
+    return {};
+}
+
+vector<string, vector<string>> CGHostDB :: GetBotConfigTexts( ) 
+{
+    return {};
+}
+
 void CGHostDB :: CreateThread( CBaseCallable *callable )
 {
 	callable->SetReady( true );
@@ -322,6 +337,21 @@ CCallableCreatePlayerId *CGHostDB :: ThreadedCreatePlayerId( string user, string
 	return NULL;
 }
 
+CCallableGetGameId *CGHostDB :: ThreadedGetGameId( )
+{
+	return NULL;
+}
+
+CCallableGetBotConfigs *CGHostDB :: ThreadedGetBotConfigs( )
+{
+	return NULL;
+}
+
+CCallableGetBotConfigTexts *CGHostDB :: ThreadedGetBotConfigTexts( )
+{
+	return NULL;
+}
+
 //
 // Callables
 //
@@ -443,6 +473,21 @@ CCallableGetPlayerId :: ~CCallableGetPlayerId( )
 }
 
 CCallableCreatePlayerId :: ~CCallableCreatePlayerId( )
+{
+
+}
+
+CCallableGetGameId :: ~CCallableGetGameId( )
+{
+
+}
+
+CCallableGetBotConfigs :: ~CCallableGetBotConfigs( )
+{
+
+}
+
+CCallableGetBotConfigTexts :: ~CCallableGetBotConfigTexts( )
 {
 
 }

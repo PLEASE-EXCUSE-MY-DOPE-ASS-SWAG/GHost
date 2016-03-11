@@ -104,6 +104,9 @@ public:
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings );
 	virtual uint32_t GetPlayerId( string user );
     virtual uint32_t CreatePlayerId( string user, string ip, string realm );
+    virtual uint32_t GetGameId( );
+    virtual vector<string, string> GetBotConfigs( uint32_t botid );
+    virtual vector<string, vector<string>> GetBotConfigTexts( uint32_t botid );
 
 	// threaded database functions
 
@@ -133,6 +136,9 @@ public:
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings );
 	virtual CCallableGetPlayerId *ThreadedGetPlayerId( string user );
 	virtual CCallableCreatePlayerId *ThreadedCreatePlayerId( string user, string ip, string realm );
+    virtual CCallableGetGameId *ThreadedGetGameId( );
+    virtual CCallableGetBotConfigs *ThreadedGetBotConfigs( uint32_t botid );
+    virtual CCallableGetBotConfigTexts *ThreadedGetBotConfigTexts( uint32_t botid );
 };
 
 //
@@ -589,6 +595,47 @@ public:
 
 	virtual bool GetResult( )				{ return m_Result; }
     virtual string GetUser( )               { return m_User; }
+	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+};
+
+class CCallableGetGameId : virtual public CBaseCallable
+{
+protected:
+	uint32_t m_Result;
+
+public:
+	CCallableGetGameId( ) : CBaseCallable( ), m_Result( 0 ) { }
+	virtual ~CCallableGetGameId( );
+
+	virtual bool GetResult( )				{ return m_Result; }
+	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+};
+
+class CCallableGetBotConfigs : virtual public CBaseCallable
+{
+protected:
+    uint32_t m_BotId;
+	vector<string, string> m_Result;
+
+public:
+	CCallableGetBotConfigs( uint32_t nBotId ) : CBaseCallable( ), m_BotId( nBotId ), m_Result( {} ) { }
+	virtual ~CCallableGetBotConfigs( );
+
+	virtual bool GetResult( )				{ return m_Result; }
+	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+};
+
+class CCallableGetBotConfigTexts : virtual public CBaseCallable
+{
+protected:
+    uint32_t m_BotId;
+	vector<string, vector<string>> m_Result;
+
+public:
+	CCallableGetBotConfigTexts( uint32_t nBotId ) : CBaseCallable( ), m_BotId( nBotId ), m_Result( {} ) { }
+	virtual ~CCallableGetBotConfigTexts( );
+
+	virtual bool GetResult( )				{ return m_Result; }
 	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
 };
 

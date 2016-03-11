@@ -474,6 +474,45 @@ CCallableCreatePlayerId *CGHostDBMySQL :: ThreadedCreatePlayerId( string user, s
 	return Callable;
 }
 
+CCallableGetGameId *CGHostDBMySQL :: ThreadedGetGameId( )
+{
+	void *Connection = GetIdleConnection( );
+
+	if( !Connection )
+		m_NumConnections++;
+
+	CCallableGetGameId *Callable = new CMySQLCallableGetGameId( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
+	CreateThread( Callable );
+	m_OutstandingCallables++;
+	return Callable;
+}
+
+CCallableGetBotConfigs *CGHostDBMySQL :: ThreadedGetBotConfigs( )
+{
+	void *Connection = GetIdleConnection( );
+
+	if( !Connection )
+		m_NumConnections++;
+
+	CCallableGetBotConfigs *Callable = new CMySQLCallableGetBotConfigs( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
+	CreateThread( Callable );
+	m_OutstandingCallables++;
+	return Callable;
+}
+
+CCallableGetBotConfigTexts *CGHostDBMySQL :: ThreadedGetBotConfigTexts( )
+{
+	void *Connection = GetIdleConnection( );
+
+	if( !Connection )
+		m_NumConnections++;
+
+	CCallableGetBotConfigTexts *Callable = new CMySQLCallableGetBotConfigTexts( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
+	CreateThread( Callable );
+	m_OutstandingCallables++;
+	return Callable;
+}
+
 void *CGHostDBMySQL :: GetIdleConnection( )
 {
 	void *Connection = NULL;
@@ -1197,6 +1236,39 @@ uint32_t MySQLCreatePlayerId( void *conn, string *error, uint32_t botid, string 
 	return RowID;
 }
 
+uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid )
+{
+	uint32_t RowID = 0;
+	string Query = "";
+
+	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+		*error = mysql_error( (MYSQL *)conn );
+	else
+		RowID = mysql_insert_id( (MYSQL *)conn );
+
+	return RowID;
+}
+
+vector<string> MySQLGetBotConfigs( void *conn, string *error, uint32_t botid )
+{
+	string Query = "";
+
+	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+		*error = mysql_error( (MYSQL *)conn );
+
+	return {};
+}
+
+vector<string, vector<string>> MySQLGetBotConfigTexts( void *conn, string *error, uint32_t botid )
+{
+	string Query = "";
+
+	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+		*error = mysql_error( (MYSQL *)conn );
+
+	return {};
+}
+
 //
 // MySQL Callables
 //
@@ -1464,6 +1536,36 @@ void CMySQLCallableCreatePlayerId :: operator( )( )
 
 	if( m_Error.empty( ) )
 		m_Result = MySQLCreatePlayerId( m_Connection, &m_Error, m_SQLBotID, m_User, m_IP, m_Realm );
+
+	Close( );
+}
+
+void CMySQLCallableGetGameId :: operator( )( )
+{
+	Init( );
+
+	if( m_Error.empty( ) )
+		m_Result = MySQLGetGameId( m_Connection, &m_Error, m_SQLBotID );
+
+	Close( );
+}
+
+void CMySQLCallableGetBotConfigs :: operator( )( )
+{
+	Init( );
+
+	if( m_Error.empty( ) )
+		m_Result = MySQLGetBotConfigs( m_Connection, &m_Error, m_SQLBotID );
+
+	Close( );
+}
+
+void CMySQLCallableGetBotConfigTexts :: operator( )( )
+{
+	Init( );
+
+	if( m_Error.empty( ) )
+		m_Result = MySQLGetBotConfigTexts( m_Connection, &m_Error, m_SQLBotID );
 
 	Close( );
 }

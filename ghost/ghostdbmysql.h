@@ -211,11 +211,14 @@ public:
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,int32_t> var_ints );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings );
-	virtual CCallableGetPlayerId *ThreadedGetPlayerId( string user );
-	virtual CCallableCreatePlayerId *ThreadedCreatePlayerId( string user, string ip, string realm );
 
 	// other database functions
-
+	virtual CCallableGetPlayerId *ThreadedGetPlayerId( string user );
+	virtual CCallableCreatePlayerId *ThreadedCreatePlayerId( string user, string ip, string realm );
+    virtual CCallableGetGameId *ThreadedGetGameId( );
+    virtual CCallableGetBotConfigs *ThreadedGetBotConfigs( );
+    virtual CCallableGetBotConfigTexts *ThreadedGetBotConfigTexts( );
+    
 	virtual void *GetIdleConnection( );
 };
 
@@ -248,6 +251,9 @@ bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gamei
 bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gameid, map<VarP,string> var_strings );
 uint32_t MySQLGetPlayerId( void *conn, string *error, uint32_t botid, string user );
 uint32_t MySQLCreatePlayerId( void *conn, string *error, uint32_t botid, string user, string ip, string realm );
+uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid );
+vector<string, string> MySQLGetBotConfigs( );
+vector<string, vector<string>> MySQLGetBotConfigTexts( );
 
 //
 // MySQL Callables
@@ -515,6 +521,37 @@ public:
 	virtual void Init( ) { CMySQLCallable :: Init( ); }
 	virtual void Close( ) { CMySQLCallable :: Close( ); }
 };
+
+class CMySQLCallableGetGameId : public CCallableGetGameId, public CMySQLCallable
+{
+public:
+	CMySQLCallableGetGameId( void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableGetGameId( ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
+
+	virtual void operator( )( );
+	virtual void Init( ) { CMySQLCallable :: Init( ); }
+	virtual void Close( ) { CMySQLCallable :: Close( ); }
+};
+
+class CMySQLCallableGetBotConfigs : public CCallableGetBotConfigs, public CMySQLCallable
+{
+public:
+	CMySQLCallableGetBotConfigs( void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableGetBotConfigs( ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
+
+	virtual void operator( )( );
+	virtual void Init( ) { CMySQLCallable :: Init( ); }
+	virtual void Close( ) { CMySQLCallable :: Close( ); }
+};
+
+class CMySQLCallableGetBotConfigTexts : public CCallableGetBotConfigTexts, public CMySQLCallable
+{
+public:
+	CMySQLCallableGetBotConfigTexts( void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableGetBotConfigTexts( ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
+
+	virtual void operator( )( );
+	virtual void Init( ) { CMySQLCallable :: Init( ); }
+	virtual void Close( ) { CMySQLCallable :: Close( ); }
+};
+
 #endif
 
 #endif
