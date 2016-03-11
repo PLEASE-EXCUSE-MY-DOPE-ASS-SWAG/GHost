@@ -165,7 +165,7 @@ public:
     // configs
     
     void ParseConfigValues( map<string, string> configs );
-    void ParseConfigTexts( map<string, vector<string> texts );
+    void ParseConfigTexts( map<string, vector<string>> texts );
 };
 
 #endif

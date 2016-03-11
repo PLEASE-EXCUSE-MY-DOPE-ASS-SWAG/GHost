@@ -1383,7 +1383,6 @@ void CBaseGame :: SendAllActions( )
 
 void CBaseGame :: SendWelcomeMessage( CGamePlayer *player )
 {
-	in.open( m_GHost->m_MOTDFile.c_str( ) );
 	// read from motd if available
     
     for( vector<string> :: iterator i = m_GHost->m_MOTD.begin( ); i != m_GHost->m_MOTD.end( ); i++ )
