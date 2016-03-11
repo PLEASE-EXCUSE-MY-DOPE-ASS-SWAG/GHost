@@ -42,9 +42,6 @@ class CCallableScoreCheck;
 class CCallableGetPlayerId;
 class CCallableCreatePlayerId;
 
-typedef pair<CCallableGetPlayerId *> PairedGetPlayerId;
-typedef pair<CCallableCreatePlayerId *> PairedCreatePlayerId;
-
 class CBaseGame
 {
 public:
@@ -57,8 +54,8 @@ protected:
 	vector<CPotentialPlayer *> m_Potentials;		// vector of potential players (connections that haven't sent a W3GS_REQJOIN packet yet)
 	vector<CGamePlayer *> m_Players;				// vector of players
 	vector<CCallableScoreCheck *> m_ScoreChecks;
-	vector<PairedGetPlayerId> m_PairedGetPlayerIds;		// vector of paired threaded database get player ids in progress
-	vector<PairedCreatePlayerId> m_PairedCreatePlayerIds;		// vector of paired threaded database get player ids in progress
+	vector<CCallableGetPlayerId *> m_PairedGetPlayerIds;		// vector of paired threaded database get player ids in progress
+	vector<CCallableCreatePlayerId *> m_PairedCreatePlayerIds;		// vector of paired threaded database get player ids in progress
 	queue<CIncomingAction *> m_Actions;				// queue of actions to be sent
 	vector<string> m_Reserved;						// vector of player names with reserved slots (from the !hold command)
 	set<string> m_IgnoredNames;						// set of player names to NOT print ban messages for when joining because they've already been printed

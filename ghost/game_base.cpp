@@ -249,11 +249,11 @@ CBaseGame :: ~CBaseGame( )
 	for( vector<CCallableScoreCheck *> :: iterator i = m_ScoreChecks.begin( ); i != m_ScoreChecks.end( ); i++ )
 		m_GHost->m_Callables.push_back( *i );
         
-	for( vector<PairedGetPlayerId> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); i++ )
-		m_GHost->m_Callables.push_back( i->second );
+	for( vector<CCallableGetPlayerId *> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); i++ )
+		m_GHost->m_Callables.push_back( *i );
 
-	for( vector<PairedCreatePlayerId> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); i++ )
-		m_GHost->m_Callables.push_back( i->second );
+	for( vector<CCallableCreatePlayerId *> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); i++ )
+		m_GHost->m_Callables.push_back( *i );
 
 	while( !m_Actions.empty( ) )
 	{
@@ -403,12 +403,12 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 			i++;
 	}
 
-	for( vector<PairedGetPlayerId> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); )
+	for( vector<CCallableGetPlayerId *> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); )
 	{
-		if( i->first->GetReady( ) )
+		if( (*i)->GetReady( ) )
 		{
-            CGamePlayer *player = GetPlayerFromName(i->first->GetUser(), true);
-            uint32_t id = i->first->GetResult();
+            CGamePlayer *player = GetPlayerFromName((*i)->GetUser(), true);
+            uint32_t id = (*i)->GetResult();
             
             if(id != 0){
                 SendChat(player, "Welcome back " + player->GetName() + "! Enjoy your stay and good luck for your game :-)");
@@ -426,12 +426,12 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 			i++;
 	}
 
-	for( vector<PairedCreatePlayerId> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); )
+	for( vector<CCallableCreatePlayerId *> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); )
 	{
-		if( i->first->GetReady( ) )
+		if( (*i)->GetReady( ) )
 		{
-            CGamePlayer *player = GetPlayerFromName(i->first->GetUser(), true);
-            uint32_t id = i->first->GetResult();
+            CGamePlayer *player = GetPlayerFromName((*i)->GetUser(), true);
+            uint32_t id = (*i)->GetResult();
             
             if(id != 0) {
                 SendChat(player, "We have created your unique identifier: " + UTIL_ToString(id));
