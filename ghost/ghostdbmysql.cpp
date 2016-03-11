@@ -1259,7 +1259,7 @@ vector<string> MySQLGetBotConfigs( void *conn, string *error, uint32_t botid )
 	return {};
 }
 
-vector<string, vector<string>> MySQLGetBotConfigTexts( void *conn, string *error, uint32_t botid )
+vector<string, vector<string> > MySQLGetBotConfigTexts( void *conn, string *error, uint32_t botid )
 {
 	string Query = "";
 

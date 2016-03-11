@@ -105,8 +105,8 @@ public:
 	virtual uint32_t GetPlayerId( string user );
     virtual uint32_t CreatePlayerId( string user, string ip, string realm );
     virtual uint32_t GetGameId( );
-    virtual vector<string, string> GetBotConfigs( uint32_t botid );
-    virtual vector<string, vector<string>> GetBotConfigTexts( uint32_t botid );
+    virtual vector<string, string> GetBotConfigs( );
+    virtual vector<string, vector<string> > GetBotConfigTexts( );
 
 	// threaded database functions
 
@@ -137,8 +137,8 @@ public:
 	virtual CCallableGetPlayerId *ThreadedGetPlayerId( string user );
 	virtual CCallableCreatePlayerId *ThreadedCreatePlayerId( string user, string ip, string realm );
     virtual CCallableGetGameId *ThreadedGetGameId( );
-    virtual CCallableGetBotConfigs *ThreadedGetBotConfigs( uint32_t botid );
-    virtual CCallableGetBotConfigTexts *ThreadedGetBotConfigTexts( uint32_t botid );
+    virtual CCallableGetBotConfigs *ThreadedGetBotConfigs( );
+    virtual CCallableGetBotConfigTexts *ThreadedGetBotConfigTexts( );
 };
 
 //
@@ -629,7 +629,7 @@ class CCallableGetBotConfigTexts : virtual public CBaseCallable
 {
 protected:
     uint32_t m_BotId;
-	vector<string, vector<string>> m_Result;
+	vector<string, vector<string> > m_Result;
 
 public:
 	CCallableGetBotConfigTexts( uint32_t nBotId ) : CBaseCallable( ), m_BotId( nBotId ), m_Result( {} ) { }

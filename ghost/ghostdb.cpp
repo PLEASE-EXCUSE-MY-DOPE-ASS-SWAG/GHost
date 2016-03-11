@@ -202,7 +202,7 @@ vector<string, string> CGHostDB :: GetBotConfigs( )
     return {};
 }
 
-vector<string, vector<string>> CGHostDB :: GetBotConfigTexts( ) 
+vector<string, vector<string> > CGHostDB :: GetBotConfigTexts( ) 
 {
     return {};
 }
