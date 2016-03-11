@@ -1383,86 +1383,19 @@ void CBaseGame :: SendAllActions( )
 
 void CBaseGame :: SendWelcomeMessage( CGamePlayer *player )
 {
-	// read from motd.txt if available (thanks to zeeg for this addition)
-
-	ifstream in;
 	in.open( m_GHost->m_MOTDFile.c_str( ) );
-
-	if( in.fail( ) )
-	{
-		// default welcome message
-
-		if( m_HCLCommandString.empty( ) )
-			SendChat( player, " " );
-
-		SendChat( player, " " );
-		SendChat( player, " " );
-		SendChat( player, " " );
-		SendChat( player, "GHost++                                         http://www.codelain.com/" );
-		SendChat( player, "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" );
-		SendChat( player, "     Game Name:                 " + m_GameName );
-
-		if( !m_HCLCommandString.empty( ) )
-			SendChat( player, "     HCL Command String:  " + m_HCLCommandString );
-	}
-	else
-	{
-		// custom welcome message
-		// don't print more than 8 lines
-
-		uint32_t Count = 0;
-		string Line;
-
-		while( !in.eof( ) && Count < 8 )
-		{
-			getline( in, Line );
-
-			if( Line.empty( ) )
-			{
-				if( !in.eof( ) )
-					SendChat( player, " " );
-			}
-			else
-				SendChat( player, Line );
-
-			Count++;
-		}
-
-		in.close( );
-	}
+	// read from motd if available
+    
+    for( vector<string> :: iterator i = m_GHost->m_MOTD.begin( ); i != m_GHost->m_MOTD.end( ); i++ )
+        SendChat(player, *i );
 }
 
 void CBaseGame :: SendEndMessage( )
 {
-	// read from gameover.txt if available
-
-	ifstream in;
-	in.open( m_GHost->m_GameOverFile.c_str( ) );
-
-	if( !in.fail( ) )
-	{
-		// don't print more than 8 lines
-
-		uint32_t Count = 0;
-		string Line;
-
-		while( !in.eof( ) && Count < 8 )
-		{
-			getline( in, Line );
-
-			if( Line.empty( ) )
-			{
-				if( !in.eof( ) )
-					SendAllChat( " " );
-			}
-			else
-				SendAllChat( Line );
-
-			Count++;
-		}
-
-		in.close( );
-	}
+	// read from gameover if available
+    
+    for( vector<string> :: iterator i = m_GHost->m_GameOver.begin( ); i != m_GHost->m_GameOver.end( ); i++ )
+        SendAllChat( *i );   
 }
 
 void CBaseGame :: EventPlayerDeleted( CGamePlayer *player )
@@ -3427,35 +3360,10 @@ void CBaseGame :: EventGameLoaded( )
 	for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
 		SendChat( *i, m_GHost->m_Language->YourLoadingTimeWas( UTIL_ToString( (float)( (*i)->GetFinishedLoadingTicks( ) - m_StartedLoadingTicks ) / 1000, 2 ) ) );
 
-	// read from gameloaded.txt if available
+	// read from gameloaded if available
 
-	ifstream in;
-	in.open( m_GHost->m_GameLoadedFile.c_str( ) );
-
-	if( !in.fail( ) )
-	{
-		// don't print more than 8 lines
-
-		uint32_t Count = 0;
-		string Line;
-
-		while( !in.eof( ) && Count < 8 )
-		{
-			getline( in, Line );
-
-			if( Line.empty( ) )
-			{
-				if( !in.eof( ) )
-					SendAllChat( " " );
-			}
-			else
-				SendAllChat( Line );
-
-			Count++;
-		}
-
-		in.close( );
-	}
+    for( vector<string> :: iterator i = m_GHost->m_GameLoaded.begin( ); i != m_GHost->m_GameLoaded.end( ); i++ )
+        SendAllChat( *i );
 }
 
 unsigned char CBaseGame :: GetSIDFromPID( unsigned char PID )
