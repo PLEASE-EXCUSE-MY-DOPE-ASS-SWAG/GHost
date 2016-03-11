@@ -1252,22 +1252,73 @@ uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid )
 
 map<string, string> MySQLGetBotConfigs( void *conn, string *error, uint32_t botid )
 {
-	string Query = "";
+    map<string, string> m_Configs;
+	string Query = "SELECT cfg_name, cfg_value FROM oh_bot_configuration WHERE cfg_botid='" + UTIL_ToString(botid) + "';";
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
+    else
+    {
+        MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
 
-	return {};
+		if( Result )
+		{
+			vector<string> Row = MySQLFetchRow( Result );
+            
+            
+			while( Row.size( ) == 2 )
+			{
+				m_Configs[Row[0]] = Row[1];
+				Row = MySQLFetchRow( Result );
+			}
+
+			mysql_free_result( Result );
+		}
+		else
+			*error = mysql_error( (MYSQL *)conn );
+    }
+
+	return m_Configs;
 }
 
 map<string, vector<string> > MySQLGetBotConfigTexts( void *conn, string *error, uint32_t botid )
 {
-	string Query = "";
+    map<string, vector<string>> m_ConfigTexts;
+    vector<string> texts;
+	string Query = "SELECT cfg_name, cfg_value FROM oh_bot_configuration WHERE cfg_botid='" + UTIL_ToString(botid) + "' AND (cfg_name='motd' OR cfg_name='gameloaded' OR cfg_name='gameover');";
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
+    else
+    {
+        MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
 
-	return {};
+		if( Result )
+		{
+			vector<string> Row = MySQLFetchRow( Result );
+            
+            
+			while( Row.size( ) == 2 )
+			{
+                texts.clear();
+                
+                std::stringstream ss(Row[1]);
+                std::string line;
+                while(std::getline(ss,line,'\n')){
+                    texts.push_back(line);
+                }
+				m_ConfigTexts[Row[0]] = texts;
+                
+				Row = MySQLFetchRow( Result );
+			}
+
+			mysql_free_result( Result );
+		}
+		else
+			*error = mysql_error( (MYSQL *)conn );
+    }
+
+	return m_ConfigTexts;
 }
 
 //
