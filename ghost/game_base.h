@@ -42,8 +42,8 @@ class CCallableScoreCheck;
 class CCallableGetPlayerId;
 class CCallableCreatePlayerId;
 
-typedef pair<string,CCallableGetPlayerId *> PairedGetPlayerId;
-typedef pair<string,CCallableCreatePlayerId *> PairedCreatePlayerId;
+typedef pair<CCallableGetPlayerId *> PairedGetPlayerId;
+typedef pair<CCallableCreatePlayerId *> PairedCreatePlayerId;
 
 class CBaseGame
 {

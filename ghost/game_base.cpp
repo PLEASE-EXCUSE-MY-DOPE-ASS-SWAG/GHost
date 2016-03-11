@@ -405,10 +405,10 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 	for( vector<PairedGetPlayerId> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); )
 	{
-		if( i->second->GetReady( ) )
+		if( i->first->GetReady( ) )
 		{
-            CGamePlayer *player = GetPlayerFromName(i->second->GetUser(), true);
-            uint32_t id = i->second->GetResult();
+            CGamePlayer *player = GetPlayerFromName(i->first->GetUser(), true);
+            uint32_t id = i->first->GetResult();
             
             if(id != 0){
                 SendChat(player, "Welcome back " + player->GetName() + "! Enjoy your stay and good luck for your game :-)");
@@ -428,10 +428,10 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 	for( vector<PairedCreatePlayerId> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); )
 	{
-		if( i->second->GetReady( ) )
+		if( i->first->GetReady( ) )
 		{
-            CGamePlayer *player = GetPlayerFromName(i->second->GetUser(), true);
-            uint32_t id = i->second->GetResult();
+            CGamePlayer *player = GetPlayerFromName(i->first->GetUser(), true);
+            uint32_t id = i->first->GetResult();
             
             if(id != 0) {
                 SendChat(player, "We have created your unique identifier: " + UTIL_ToString(id));
