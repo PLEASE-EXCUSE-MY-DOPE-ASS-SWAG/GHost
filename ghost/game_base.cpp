@@ -249,11 +249,11 @@ CBaseGame :: ~CBaseGame( )
 	for( vector<CCallableScoreCheck *> :: iterator i = m_ScoreChecks.begin( ); i != m_ScoreChecks.end( ); i++ )
 		m_GHost->m_Callables.push_back( *i );
         
-	for( vector<CCallableGetPlayerId> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); i++ )
-		m_GHost->m_Callables.push_back( *i );
+	for( vector<PairedGetPlayerId> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); i++ )
+		m_GHost->m_Callables.push_back( i->second );
 
-	for( vector<CCallableCreatePlayerId> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); i++ )
-		m_GHost->m_Callables.push_back( *i );
+	for( vector<airedCreatePlayerId> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); i++ )
+		m_GHost->m_Callables.push_back( i->second );
 
 	while( !m_Actions.empty( ) )
 	{
@@ -403,7 +403,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 			i++;
 	}
 
-	for( vector<CCallableGetPlayerId *> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); )
+	for( vector<m_PairedGetPlayerId> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); )
 	{
 		if( (*i)->GetReady( ) )
 		{
@@ -426,7 +426,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 			i++;
 	}
 
-	for( vector<CCallableCreatePlayerId *> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); )
+	for( vector<PairedCreatePlayerId> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); )
 	{
 		if( (*i)->GetReady( ) )
 		{
