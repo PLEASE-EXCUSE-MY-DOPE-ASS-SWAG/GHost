@@ -1250,7 +1250,7 @@ uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid )
 	return RowID;
 }
 
-map<string> MySQLGetBotConfigs( void *conn, string *error, uint32_t botid )
+map<string, string> MySQLGetBotConfigs( void *conn, string *error, uint32_t botid )
 {
 	string Query = "";
 
