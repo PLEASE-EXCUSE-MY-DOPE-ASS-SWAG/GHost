@@ -1249,7 +1249,7 @@ uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid )
 	return RowID;
 }
 
-vector<string> MySQLGetBotConfigs( void *conn, string *error, uint32_t botid )
+map<string> MySQLGetBotConfigs( void *conn, string *error, uint32_t botid )
 {
 	string Query = "";
 
@@ -1259,7 +1259,7 @@ vector<string> MySQLGetBotConfigs( void *conn, string *error, uint32_t botid )
 	return {};
 }
 
-vector<string, vector<string> > MySQLGetBotConfigTexts( void *conn, string *error, uint32_t botid )
+map<string, vector<string> > MySQLGetBotConfigTexts( void *conn, string *error, uint32_t botid )
 {
 	string Query = "";
 

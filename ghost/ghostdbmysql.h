@@ -252,8 +252,8 @@ bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gamei
 uint32_t MySQLGetPlayerId( void *conn, string *error, uint32_t botid, string user );
 uint32_t MySQLCreatePlayerId( void *conn, string *error, uint32_t botid, string user, string ip, string realm );
 uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid );
-vector<string, string> MySQLGetBotConfigs( );
-vector<string, vector<string> > MySQLGetBotConfigTexts( );
+map<string, string> MySQLGetBotConfigs( );
+map<string, vector<string> > MySQLGetBotConfigTexts( );
 
 //
 // MySQL Callables

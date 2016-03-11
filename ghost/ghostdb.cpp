@@ -197,12 +197,12 @@ uint32_t CGHostDB :: GetGameId( )
     return 0;
 }
 
-vector<string, string> CGHostDB :: GetBotConfigs( )
+map<string, string> CGHostDB :: GetBotConfigs( )
 {
     return {};
 }
 
-vector<string, vector<string> > CGHostDB :: GetBotConfigTexts( ) 
+map<string, vector<string> > CGHostDB :: GetBotConfigTexts( ) 
 {
     return {};
 }

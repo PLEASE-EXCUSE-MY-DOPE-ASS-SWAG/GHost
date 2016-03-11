@@ -108,8 +108,8 @@ public:
 	virtual uint32_t GetPlayerId( string user );
     virtual uint32_t CreatePlayerId( string user, string ip, string realm );
     virtual uint32_t GetGameId( );
-    virtual vector<string, string> GetBotConfigs( );
-    virtual vector<string, vector<string> > GetBotConfigTexts( );
+    virtual map<string, string> GetBotConfigs( );
+    virtual map<string, vector<string> > GetBotConfigTexts( );
 
 	// threaded database functions
 
@@ -617,27 +617,27 @@ public:
 class CCallableGetBotConfigs : virtual public CBaseCallable
 {
 protected:
-	vector<string, string> m_Result;
+	map<string, string> m_Result;
 
 public:
 	CCallableGetBotConfigs( ) : CBaseCallable( ), m_Result( {} ) { }
 	virtual ~CCallableGetBotConfigs( );
 
-	virtual vector<string, string> GetResult( )				{ return m_Result; }
-	virtual void SetResult( vector<string, string> nResult )	{ m_Result = nResult; }
+	virtual map<string, string> GetResult( )				{ return m_Result; }
+	virtual void SetResult( map<string, string> nResult )	{ m_Result = nResult; }
 };
 
 class CCallableGetBotConfigTexts : virtual public CBaseCallable
 {
 protected:
-	vector<string, vector<string> > m_Result;
+	map<string, vector<string> > m_Result;
 
 public:
 	CCallableGetBotConfigTexts( ) : CBaseCallable( ), m_Result( {} ) { }
 	virtual ~CCallableGetBotConfigTexts( );
 
-	virtual vector<string, vector<string> > GetResult( )				{ return m_Result; }
-	virtual void SetResult( vector<string, vector<string> > nResult )	{ m_Result = nResult; }
+	virtual map<string, vector<string> > GetResult( )				{ return m_Result; }
+	virtual void SetResult( map<string, vector<string> > nResult )	{ m_Result = nResult; }
 };
 
 //
