@@ -252,6 +252,9 @@ CBaseGame :: ~CBaseGame( )
 	for( vector<CCallableGetPlayerId *> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); i++ )
 		m_GHost->m_Callables.push_back( *i );
 
+	for( vector<CCallableCreatePlayerId *> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); i++ )
+		m_GHost->m_Callables.push_back( *i );
+
 	while( !m_Actions.empty( ) )
 	{
 		delete m_Actions.front( );
@@ -409,8 +412,10 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
             
             if(id != 0){
                 SendChat(player, "Welcome back " + player->GetName() + "! Enjoy your stay and good luck for your game :-)");
+                player->SetPlayerId( id );
             } else {
                 SendChat(player, "Hey you are new here! Please stand by, we shortly create an unique identifier for your.");
+                m_PairedCreatePlayerIds.push_back(m_GHost->m_DB->ThreadedCreatePlayerId(player->GetName(), player->GetExternalIPString(), player->GetSpoofedRealm()));
             }
 
 			m_GHost->m_DB->RecoverCallable( *i );
@@ -420,6 +425,30 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 		else
 			i++;
 	}
+
+	for( vector<CCallableCreatePlayerId *> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); )
+	{
+		if( (*i)->GetReady( ) )
+		{
+            CGamePlayer *player = GetPlayerFromName(i->second->user);
+            uint32_t id = (*i)->GetResult();
+            
+            if(id != 0) {
+                SendChat(player, "We have created your unique identifier: " + UTIL_ToString(id));
+                player->SetPlayerId(id);
+            } else {
+                SendChat(player, "We are sorry, there was an error creating your unique identifier. Retrying...");
+                m_PairedCreatePlayerIds.push_back(m_GHost->m_DB->ThreadedCreatePlayerId(player->GetName(), player->GetExternalIPString(), player->GetSpoofedRealm()));
+            }
+
+			m_GHost->m_DB->RecoverCallable( *i );
+			delete *i;
+			i = m_PairedCreatePlayerIds.erase( i );
+		}
+		else
+			i++;
+	}
+    
 	// update players
 
 	for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); )

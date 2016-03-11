@@ -47,6 +47,7 @@ class CCallableScoreCheck;
 class CCallableW3MMDPlayerAdd;
 class CCallableW3MMDVarAdd;
 class CCallableGetPlayerId;
+class CCallableCreatePlayerId;
 class CDBBan;
 class CDBGame;
 class CDBGamePlayer;
@@ -102,6 +103,7 @@ public:
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals );
 	virtual bool W3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings );
 	virtual uint32_t GetPlayerId( string user );
+    virtual uint32_t CreatePlayerId( string user, string ip, string realm );
 
 	// threaded database functions
 
@@ -130,6 +132,7 @@ public:
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings );
 	virtual CCallableGetPlayerId *ThreadedGetPlayerId( string user );
+	virtual CCallableCreatePlayerId *ThreadedCreatePlayerId( string user, string ip, string realm );
 };
 
 //
@@ -566,6 +569,22 @@ protected:
 public:
 	CCallableGetPlayerId( string nUser ) : CBaseCallable( ), m_User(nUser), m_Result( 0 ) { }
 	virtual ~CCallableGetPlayerId( );
+
+	virtual bool GetResult( )				{ return m_Result; }
+	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+};
+
+class CCallableCreatePlayerId : virtual public CBaseCallable
+{
+protected:
+	string m_User;
+    string m_IP;
+    string m_Realm;
+	uint32_t m_Result;
+
+public:
+	CCallableCreatePlayerId( string nUser, string nIP, string nRealm ) : CBaseCallable( ), m_User(nUser), m_IP( nIP ), m_Realm( nRealm), m_Result( 0 ) { }
+	virtual ~CCallableCreatePlayerId( );
 
 	virtual bool GetResult( )				{ return m_Result; }
 	virtual void SetResult( bool nResult )	{ m_Result = nResult; }

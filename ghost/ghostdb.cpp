@@ -187,6 +187,11 @@ uint32_t CGHostDB :: GetPlayerId( string user )
     return 0;
 }
 
+uint32_t CGHostDB :: CreatePlayerId( string user, string ip, string realm )
+{
+    return 0;
+}
+
 void CGHostDB :: CreateThread( CBaseCallable *callable )
 {
 	callable->SetReady( true );
@@ -312,6 +317,11 @@ CCallableGetPlayerId *CGHostDB :: ThreadedGetPlayerId( string user )
 	return NULL;
 }
 
+CCallableCreatePlayerId *CGHostDB :: ThreadedCreatePlayerId( string user, string ip, string realm )
+{
+	return NULL;
+}
+
 //
 // Callables
 //
@@ -428,6 +438,11 @@ CCallableW3MMDVarAdd :: ~CCallableW3MMDVarAdd( )
 }
 
 CCallableGetPlayerId :: ~CCallableGetPlayerId( )
+{
+
+}
+
+CCallableCreatePlayerId :: ~CCallableCreatePlayerId( )
 {
 
 }

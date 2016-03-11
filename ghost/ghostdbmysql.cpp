@@ -461,6 +461,19 @@ CCallableGetPlayerId *CGHostDBMySQL :: ThreadedGetPlayerId( string user )
 	return Callable;
 }
 
+CCallableCreatePlayerId *CGHostDBMySQL :: ThreadedCreatePlayerId( string user, string ip, string realm )
+{
+	void *Connection = GetIdleConnection( );
+
+	if( !Connection )
+		m_NumConnections++;
+
+	CCallableCreatePlayerId *Callable = new CMySQLCallableCreatePlayerId( user, ip, realm, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
+	CreateThread( Callable );
+	m_OutstandingCallables++;
+	return Callable;
+}
+
 void *CGHostDBMySQL :: GetIdleConnection( )
 {
 	void *Connection = NULL;
@@ -1153,8 +1166,28 @@ bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gamei
 uint32_t MySQLGetPlayerId( void *conn, string *error, uint32_t botid, string user )
 {
 	transform( user.begin( ), user.end( ), user.begin( ), (int(*)(int))tolower );
+    string EscLowerName = MySQLEscapeString( conn, user );
 	uint32_t RowID = 0;
-	string Query = "SELECT id FROM oh_stats_players WHERE player_lower = '" + user + "'";
+	string Query = "SELECT id FROM oh_stats_players WHERE player_lower = '" + EscLowerName + "'";
+
+	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+		*error = mysql_error( (MYSQL *)conn );
+	else
+		RowID = mysql_insert_id( (MYSQL *)conn );
+
+	return RowID;
+}
+
+uint32_t MySQLCreatePlayerId( void *conn, string *error, uint32_t botid, string user, string ip, string realm )
+{
+    string EscName = MySQLEscapeString( conn, user );
+	transform( user.begin( ), user.end( ), user.begin( ), (int(*)(int))tolower );
+    string EscLowerName = MySQLEscapeString( conn, user );
+    string EscIP = MySQLEscapeString( conn, ip );
+    string EscRealm = MySQLEscapeString( conn, realm );
+    
+	uint32_t RowID = 0;
+	string Query = "INSERT INTO oh_stats_players (player, player_lower, ip, realm, player_language) VALUES ('"+EscName+"','"+EscLowerName+"','"+EscIP+"','"+EscRealm+"');";
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -1421,6 +1454,16 @@ void CMySQLCallableGetPlayerId :: operator( )( )
 
 	if( m_Error.empty( ) )
 		m_Result = MySQLGetPlayerId( m_Connection, &m_Error, m_SQLBotID, m_User );
+
+	Close( );
+}
+
+void CMySQLCallableCreatePlayerId :: operator( )( )
+{
+	Init( );
+
+	if( m_Error.empty( ) )
+		m_Result = MySQLCreatePlayerId( m_Connection, &m_Error, m_SQLBotID, m_User, m_IP, m_Realm );
 
 	Close( );
 }

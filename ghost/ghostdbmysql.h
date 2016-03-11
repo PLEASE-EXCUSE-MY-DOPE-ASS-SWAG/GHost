@@ -212,6 +212,7 @@ public:
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,double> var_reals );
 	virtual CCallableW3MMDVarAdd *ThreadedW3MMDVarAdd( uint32_t gameid, map<VarP,string> var_strings );
 	virtual CCallableGetPlayerId *ThreadedGetPlayerId( string user );
+	virtual CCallableCreatePlayerId *ThreadedCreatePlayerId( string user, string ip, string realm );
 
 	// other database functions
 
@@ -246,6 +247,7 @@ bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gamei
 bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gameid, map<VarP,double> var_reals );
 bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gameid, map<VarP,string> var_strings );
 uint32_t MySQLGetPlayerId( void *conn, string *error, uint32_t botid, string user );
+uint32_t MySQLCreatePlayerId( void *conn, string *error, uint32_t botid, string user, string ip, string realm );
 
 //
 // MySQL Callables
@@ -498,6 +500,16 @@ class CMySQLCallableGetPlayerId : public CCallableGetPlayerId, public CMySQLCall
 {
 public:
 	CMySQLCallableGetPlayerId( string nUser, void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableGetPlayerId( nUser ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
+
+	virtual void operator( )( );
+	virtual void Init( ) { CMySQLCallable :: Init( ); }
+	virtual void Close( ) { CMySQLCallable :: Close( ); }
+};
+
+class CMySQLCallableCreatePlayerId : public CCallableCreatePlayerId, public CMySQLCallable
+{
+public:
+	CMySQLCallableCreatePlayerId( string nUser, string nIP, string nRealm, void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableCreatePlayerId( nUser, nIP, nRealm ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
 
 	virtual void operator( )( );
 	virtual void Init( ) { CMySQLCallable :: Init( ); }
