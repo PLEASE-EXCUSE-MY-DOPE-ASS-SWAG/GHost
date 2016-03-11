@@ -41,6 +41,9 @@ class CLanguage;
 class CMap;
 class CSaveGame;
 class CConfig;
+class CCallableGetGameId;
+class CCallableGetBotConfigs;
+class CCallableGetBotConfigTexts;
 
 class CGHost
 {
@@ -56,6 +59,9 @@ public:
 	vector<CBaseGame *> m_Games;			// these games are in progress
 	CGHostDB *m_DB;							// database
 	CGHostDB *m_DBLocal;					// local database (for temporary data)
+    CCallableGetGameId *m_CallableGetGameId;
+    CCallableGetBotConfigs *m_CallableGetBotConfig;
+    CCallableGetBotConfigTexts *m_CallableGetBotConfigText;
 	vector<CBaseCallable *> m_Callables;	// vector of orphaned callables waiting to die
 	vector<BYTEARRAY> m_LocalAddresses;		// vector of local IP addresses
 	CLanguage *m_Language;					// language
@@ -117,14 +123,16 @@ public:
 	bool m_VoteKickAllowed;					// config value: if votekicks are allowed or not
 	uint32_t m_VoteKickPercentage;			// config value: percentage of players required to vote yes for a votekick to pass
 	string m_DefaultMap;					// config value: default map (map.cfg)
-	string m_MOTDFile;						// config value: motd.txt
-	string m_GameLoadedFile;				// config value: gameloaded.txt
-	string m_GameOverFile;					// config value: gameover.txt
 	unsigned char m_LANWar3Version;			// config value: LAN warcraft 3 version
 	uint32_t m_ReplayWar3Version;			// config value: replay warcraft 3 version (for saving replays)
 	uint32_t m_ReplayBuildNumber;			// config value: replay build number (for saving replays)
 	bool m_TCPNoDelay;						// config value: use Nagle's algorithm or not
 	uint32_t m_MatchMakingMethod;			// config value: the matchmaking method
+    uint32_t m_NewGameId;
+    uint32_t m_LastGameIdUpdate;
+    vector<string> m_MOTD;
+    vector<string> m_GameLoaded;
+    vector<string> m_GameOver;
 
 	CGHost( CConfig *CFG );
 	~CGHost( );
@@ -152,8 +160,12 @@ public:
 	void ReloadConfigs( );
 	void SetConfigs( CConfig *CFG );
 	void ExtractScripts( );
-	void LoadIPToCountryData( );
 	void CreateGame( CMap *map, unsigned char gameState, bool saveGame, string gameName, string ownerName, string creatorName, string creatorServer, bool whisper );
+    
+    // configs
+    
+    void ParseConfigValues( map<string, string> configs );
+    void ParseConfigTexts( map<string, vector<string> texts );
 };
 
 #endif

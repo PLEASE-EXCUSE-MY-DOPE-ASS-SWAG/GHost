@@ -393,10 +393,18 @@ CGHost :: CGHost( CConfig *CFG )
 	m_CRC->Initialize( );
 	m_SHA = new CSHA1( );
 	m_CurrentGame = NULL;
-	string DBType = CFG->GetString( "db_type", "sqlite3" );
+    m_CallableGetGameId = NULL;
+    m_CallableGetBotConfig = NULL;
+    m_CallableGetBotConfigText = NULL;
+    m_NewGameId = 0;
+    m_LastGameIdUpdate = 0;
 	CONSOLE_Print( "[GHOST] opening primary database" );
 
     m_DB = new CGHostDBMySQL( CFG );
+    
+    /* load configs */
+    m_CallableGetBotConfig = m_DB->ThreadedGetBotConfigs( );
+    m_CallableGetBotConfigText = m_DB->ThreadedGetConfigTexts( );
 
 	// get a list of local IP addresses
 	// this list is used elsewhere to determine if a player connecting to the bot is local or not
@@ -465,7 +473,6 @@ CGHost :: CGHost( CConfig *CFG )
 	m_ExitingNice = false;
 	m_Enabled = true;
 	m_Version = "17.0";
-	m_HostCounter = 1;
 	m_AutoHostMaximumGames = CFG->GetInt( "autohost_maxgames", 0 );
 	m_AutoHostAutoStartPlayers = CFG->GetInt( "autohost_startplayers", 0 );
 	m_AutoHostGameName = CFG->GetString( "autohost_gamename", string( ) );
@@ -1001,7 +1008,7 @@ bool CGHost :: Update( long usecBlock )
 
 	// autohost
 
-	if( !m_AutoHostGameName.empty( ) && m_AutoHostMaximumGames != 0 && m_AutoHostAutoStartPlayers != 0 && GetTime( ) - m_LastAutoHostTime >= 30 )
+	if( !m_AutoHostGameName.empty( ) && m_AutoHostMaximumGames != 0 && m_AutoHostAutoStartPlayers != 0 && GetTime( ) - m_LastAutoHostTime >= 30 && m_NewGameId != 0 )
 	{
 		// copy all the checks from CGHost :: CreateGame here because we don't want to spam the chat when there's an error
 		// instead we fail silently and try again soon
@@ -1010,7 +1017,7 @@ bool CGHost :: Update( long usecBlock )
 		{
 			if( m_AutoHostMap->GetValid( ) )
 			{
-				string GameName = m_AutoHostGameName + " #" + UTIL_ToString( m_HostCounter );
+				string GameName = m_AutoHostGameName + " - " + UTIL_ToString( m_NewGameId % 100 );
 
 				if( GameName.size( ) <= 31 )
 				{
@@ -1069,6 +1076,39 @@ bool CGHost :: Update( long usecBlock )
 
 		m_LastAutoHostTime = GetTime( );
 	}
+    
+    // load a new gameid
+    if( m_NewGameId == 0 && m_LastGameIdUpdate != 0 && GetTime( ) - m_LastGameIdUpdate >= 5 )
+    {
+        m_CallableGetGameId = m_DB->ThreadedGetGameId( );
+        m_LastGameIdUpdate = 0;
+    }
+
+    if( m_CallableGetGameId && m_CallableGetGameId->GetReady( ) )
+    {
+        m_NewGameId = m_CallableGetGameId->GetResult( );
+        m_DB->RecoverCallable( m_CallableGetGameId );
+        delete m_CallableGetGameId;
+        m_CallableGetGameId = NULL;
+    }
+
+    if( m_CallableGetBotConfig && m_CallableGetBotConfig->GetReady( )) {
+        map<string, string> configs = m_CallableGetBotConfig->GetResult( );
+        ParseConfigValues( configs )
+         
+        m_DB->RecoverCallable( m_CallableGetBotConfig );
+        delete m_CallableGetBotConfig;
+        m_CallableGetBotConfig = NULL;
+    }
+
+    if( m_CallableGetBotConfigText && m_CallableGetBotConfigText->GetReady( )) {
+        map<string, vector<string>> texts = m_CallableGetBotConfigText->GetResult( );
+        ParseConfigTexts( texts );
+        
+        m_DB->RecoverCallable( m_CallableGetBotConfigText );
+        delete m_CallableGetBotConfigText;
+        m_CallableGetBotConfigText = NULL;
+    }
 
 	return m_Exiting || AdminExit || BNETExit;
 }
@@ -1217,10 +1257,7 @@ void CGHost :: SetConfigs( CConfig *CFG )
 		m_VoteKickPercentage = 100;
 		CONSOLE_Print( "[GHOST] warning - bot_votekickpercentage is greater than 100, using 100 instead" );
 	}
-
-	m_MOTDFile = CFG->GetString( "bot_motdfile", "motd.txt" );
-	m_GameLoadedFile = CFG->GetString( "bot_gameloadedfile", "gameloaded.txt" );
-	m_GameOverFile = CFG->GetString( "bot_gameoverfile", "gameover.txt" );
+    
 	m_TCPNoDelay = CFG->GetInt( "tcp_nodelay", 0 ) == 0 ? false : true;
 	m_MatchMakingMethod = CFG->GetInt( "bot_matchmakingmethod", 1 );
 }
@@ -1460,4 +1497,37 @@ void CGHost :: CreateGame( CMap *map, unsigned char gameState, bool saveGame, st
 		if( (*i)->GetHoldClan( ) )
 			(*i)->HoldClan( m_CurrentGame );
 	}
+}
+
+void CGHost :: ParseConfigValues( map<string, string> configs )
+{
+    typedef map<string, string>::iterator config_iterator;
+    
+    for(config_iterator iterator = m.begin(); iterator != m.end(); iterator++)
+    {
+        
+    }
+}
+
+void CGHost :: ParseConfigTexts( map<string, vector<string> texts )
+{
+    typedef map<string, vector<string>>::iterator text_iterator;
+    
+    for(text_iterator iterator = m.begin(); iterator != m.end(); iterator++)
+    {
+        switch(iterator->first) {
+            case 'gameloaded':
+                m_GameLoaded = i->second;
+            break;
+            case 'gameover':
+                m_GameOver = i->second;
+            break;
+            case 'motd':
+                m_MOTD = i->second;
+            break;
+            default:
+                CONSOLE_Print("Didn't use '" + i->first + "' data!");
+            break;
+        }
+    }
 }

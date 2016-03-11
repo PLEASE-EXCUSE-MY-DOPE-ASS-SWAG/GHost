@@ -1240,7 +1240,7 @@ uint32_t MySQLCreatePlayerId( void *conn, string *error, uint32_t botid, string 
 uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid )
 {
 	uint32_t RowID = 0;
-	string Query = "";
+	string Query = "INSERT INTO oh_games (botid, gamename, gamestatus, datetime) VALUES (" + UTIL_ToString(botid) + ", 'RESERVED', 0, CURRENT_TIMESTAMP());";
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
