@@ -571,6 +571,7 @@ public:
 	virtual ~CCallableGetPlayerId( );
 
 	virtual bool GetResult( )				{ return m_Result; }
+    virtual string GetUser( )               { return m_User; }
 	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
 };
 
@@ -587,6 +588,7 @@ public:
 	virtual ~CCallableCreatePlayerId( );
 
 	virtual bool GetResult( )				{ return m_Result; }
+    virtual string GetUser( )               { return m_User; }
 	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
 };
 
