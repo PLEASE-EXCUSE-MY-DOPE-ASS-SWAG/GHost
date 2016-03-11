@@ -252,7 +252,7 @@ CBaseGame :: ~CBaseGame( )
 	for( vector<PairedGetPlayerId> :: iterator i = m_PairedGetPlayerIds.begin( ); i != m_PairedGetPlayerIds.end( ); i++ )
 		m_GHost->m_Callables.push_back( i->second );
 
-	for( vector<airedCreatePlayerId> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); i++ )
+	for( vector<PairedCreatePlayerId> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); i++ )
 		m_GHost->m_Callables.push_back( i->second );
 
 	while( !m_Actions.empty( ) )
