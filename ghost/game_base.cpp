@@ -407,7 +407,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 	{
 		if( i->second->GetReady( ) )
 		{
-            CGamePlayer *player = GetPlayerFromName(i->second->user);
+            CGamePlayer *player = GetPlayerFromName(i->second->m_User);
             uint32_t id = i->second->GetResult();
             
             if(id != 0){
@@ -430,7 +430,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 	{
 		if( i->second->GetReady( ) )
 		{
-            CGamePlayer *player = GetPlayerFromName(i->second->user);
+            CGamePlayer *player = GetPlayerFromName(i->second->m_User);
             uint32_t id = i->second->GetResult();
             
             if(id != 0) {
