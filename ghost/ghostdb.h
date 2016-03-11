@@ -579,9 +579,9 @@ public:
 	CCallableGetPlayerId( string nUser ) : CBaseCallable( ), m_User(nUser), m_Result( 0 ) { }
 	virtual ~CCallableGetPlayerId( );
 
-	virtual bool GetResult( )				{ return m_Result; }
+	virtual uint32_t GetResult( )				{ return m_Result; }
     virtual string GetUser( )               { return m_User; }
-	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+	virtual void SetResult( uint32_t nResult )	{ m_Result = nResult; }
 };
 
 class CCallableCreatePlayerId : virtual public CBaseCallable
@@ -596,9 +596,9 @@ public:
 	CCallableCreatePlayerId( string nUser, string nIP, string nRealm ) : CBaseCallable( ), m_User(nUser), m_IP( nIP ), m_Realm( nRealm), m_Result( 0 ) { }
 	virtual ~CCallableCreatePlayerId( );
 
-	virtual bool GetResult( )				{ return m_Result; }
+	virtual uint32_t GetResult( )				{ return m_Result; }
     virtual string GetUser( )               { return m_User; }
-	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+	virtual void SetResult( uint32_t nResult )	{ m_Result = nResult; }
 };
 
 class CCallableGetGameId : virtual public CBaseCallable
@@ -610,36 +610,34 @@ public:
 	CCallableGetGameId( ) : CBaseCallable( ), m_Result( 0 ) { }
 	virtual ~CCallableGetGameId( );
 
-	virtual bool GetResult( )				{ return m_Result; }
-	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+	virtual uint32_t GetResult( )				{ return m_Result; }
+	virtual void SetResult( uint32_t nResult )	{ m_Result = nResult; }
 };
 
 class CCallableGetBotConfigs : virtual public CBaseCallable
 {
 protected:
-    uint32_t m_BotId;
 	vector<string, string> m_Result;
 
 public:
-	CCallableGetBotConfigs( uint32_t nBotId ) : CBaseCallable( ), m_BotId( nBotId ), m_Result( {} ) { }
+	CCallableGetBotConfigs( ) : CBaseCallable( ), m_Result( {} ) { }
 	virtual ~CCallableGetBotConfigs( );
 
-	virtual bool GetResult( )				{ return m_Result; }
-	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+	virtual vector<string, string> GetResult( )				{ return m_Result; }
+	virtual void SetResult( vector<string, string> nResult )	{ m_Result = nResult; }
 };
 
 class CCallableGetBotConfigTexts : virtual public CBaseCallable
 {
 protected:
-    uint32_t m_BotId;
 	vector<string, vector<string> > m_Result;
 
 public:
-	CCallableGetBotConfigTexts( uint32_t nBotId ) : CBaseCallable( ), m_BotId( nBotId ), m_Result( {} ) { }
+	CCallableGetBotConfigTexts( ) : CBaseCallable( ), m_Result( {} ) { }
 	virtual ~CCallableGetBotConfigTexts( );
 
-	virtual bool GetResult( )				{ return m_Result; }
-	virtual void SetResult( bool nResult )	{ m_Result = nResult; }
+	virtual vector<string, vector<string> > GetResult( )				{ return m_Result; }
+	virtual void SetResult( vector<string, vector<string> > nResult )	{ m_Result = nResult; }
 };
 
 //
