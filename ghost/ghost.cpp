@@ -1411,7 +1411,8 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
             int pos = 5;
             
             if(iterator->first.substr(4, 1) != "_") {
-                bnetNumber = UTIL_ToUInt32(iterator->first.substr(4, 1));
+                string swaggynumber = iterator->first.substr(4, 1);
+                bnetNumber = UTIL_ToUInt32(swaggynumber);
                 pos = 6;
             }
             m_BNetCollection[bnetNumber][iterator->first.substr(pos)] = iterator->second;
