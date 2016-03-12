@@ -1,6 +1,7 @@
 INSERT INTO `oh_bot_configuration` (`cfg_botid`, `cfg_name`, `cfg_description`, `cfg_value`) VALUES 
 ('0', 'bot_language', '', 'language.cfg'), 
-('0', 'bot_tft', '', '1'), 
+('0', 'bot_tft', '', '1'),
+('0', 'bot_bindaddress', '', ''),
 ('0', 'bot_hostport', '', '6112'), 
 ('0', 'bot_reconnect', '', '0'), 
 ('0', 'bot_reconnectport', '', '6114'), 

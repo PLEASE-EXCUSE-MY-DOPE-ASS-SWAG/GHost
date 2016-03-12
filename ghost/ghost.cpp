@@ -1313,6 +1313,8 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
             m_Language = new CLanguage( iterator->second );
         } else if(iterator->first == "bot_tft") {
             m_TFT = UTIL_ToUInt32(iterator->second);
+        } else if(iterator->first == "bot_bindaddress") {
+            m_BindAddress = iterator->second;
         } else if(iterator->first == "bot_hostport") {
             m_HostPort = iterator->second;
         } else if(iterator->first == "bot_reconnect") {
