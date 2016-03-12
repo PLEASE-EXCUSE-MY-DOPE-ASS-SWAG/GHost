@@ -1526,7 +1526,7 @@ void CGHost :: ParseConfigTexts( map<string, vector<string>> texts )
                 m_MOTD = iterator->second;
             break;
             default:
-                CONSOLE_Print("Didn't use '" + i->first + "' data!");
+                CONSOLE_Print("Didn't use '" + iterator->first + "' data!");
             break;
         }
     }
