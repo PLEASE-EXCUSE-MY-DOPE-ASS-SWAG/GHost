@@ -133,6 +133,7 @@ public:
     vector<string> m_MOTD;
     vector<string> m_GameLoaded;
     vector<string> m_GameOver;
+    map<int, map<string, string>> m_BNetCollection;
 
 	CGHost( CConfig *CFG );
 	~CGHost( );

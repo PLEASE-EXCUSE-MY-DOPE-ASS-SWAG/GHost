@@ -1407,7 +1407,14 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
         } else if(iterator->first == "autohost_owner") {
             m_AutoHostOwner = iterator->second;
         } else if(iterator->first.substr(0, 4) == "bnet") {
-             
+            int bnetNumber = 0;
+            int pos = 5;
+            
+            if(iterator->first.substr(4, 1) != "_") {
+                bnetNumber = UTIL_ToUInt32(iterator->first.substr(4, 1));
+                pos = 6;
+            }
+            m_BNetCollection[bnetNumber][iterator->first.substr(pos)] = i->second;
         }
     }
 }
