@@ -1414,7 +1414,7 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
                 bnetNumber = UTIL_ToUInt32(iterator->first.substr(4, 1));
                 pos = 6;
             }
-            m_BNetCollection[bnetNumber][iterator->first.substr(pos)] = i->second;
+            m_BNetCollection[bnetNumber][iterator->first.substr(pos)] = iterator->second;
         }
     }
 }
