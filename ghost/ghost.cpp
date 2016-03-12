@@ -1094,7 +1094,7 @@ bool CGHost :: Update( long usecBlock )
 
     if( m_CallableGetBotConfig && m_CallableGetBotConfig->GetReady( )) {
         map<string, string> configs = m_CallableGetBotConfig->GetResult( );
-        ParseConfigValues( configs )
+        ParseConfigValues( configs );
          
         m_DB->RecoverCallable( m_CallableGetBotConfig );
         delete m_CallableGetBotConfig;
@@ -1517,13 +1517,13 @@ void CGHost :: ParseConfigTexts( map<string, vector<string>> texts )
     {
         switch(iterator->first) {
             case 'gameloaded':
-                m_GameLoaded = i->second;
+                m_GameLoaded = iterator->second;
             break;
             case 'gameover':
-                m_GameOver = i->second;
+                m_GameOver = iterator->second;
             break;
             case 'motd':
-                m_MOTD = i->second;
+                m_MOTD = iterator->second;
             break;
             default:
                 CONSOLE_Print("Didn't use '" + i->first + "' data!");
