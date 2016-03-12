@@ -1515,19 +1515,14 @@ void CGHost :: ParseConfigTexts( map<string, vector<string>> texts )
     
     for(text_iterator iterator = texts.begin(); iterator != texts.end(); iterator++)
     {
-        switch(iterator->first) {
-            case 'gameloaded':
-                m_GameLoaded = iterator->second;
-            break;
-            case 'gameover':
-                m_GameOver = iterator->second;
-            break;
-            case 'motd':
-                m_MOTD = iterator->second;
-            break;
-            default:
-                CONSOLE_Print("Didn't use '" + iterator->first + "' data!");
-            break;
+        if(iterator->first == "gameloaded") {
+            m_GameLoaded = iterator->second;
+        } else if(iterator->first == "gameover") {
+            m_GameOver = iterator->second;
+        } else if(iterator->first == "motd") {
+            m_MOTD = iterator->second;
+        } else {
+            CONSOLE_Print("Didn't use '" + iterator->first + "' data!");
         }
     }
 }
