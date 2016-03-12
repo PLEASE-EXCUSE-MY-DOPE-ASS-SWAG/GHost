@@ -404,7 +404,7 @@ CGHost :: CGHost( CConfig *CFG )
     
     /* load configs */
     m_CallableGetBotConfig = m_DB->ThreadedGetBotConfigs( );
-    m_CallableGetBotConfigText = m_DB->ThreadedGetConfigTexts( );
+    m_CallableGetBotConfigText = m_DB->ThreadedGetBotConfigTexts( );
 
 	// get a list of local IP addresses
 	// this list is used elsewhere to determine if a player connecting to the bot is local or not
@@ -1503,17 +1503,17 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
 {
     typedef map<string, string>::iterator config_iterator;
     
-    for(config_iterator iterator = m.begin(); iterator != m.end(); iterator++)
+    for(config_iterator iterator = configs.begin(); iterator != configs.end(); iterator++)
     {
         
     }
 }
 
-void CGHost :: ParseConfigTexts( map<string, vector<string> texts )
+void CGHost :: ParseConfigTexts( map<string, vector<string>> texts )
 {
     typedef map<string, vector<string>>::iterator text_iterator;
     
-    for(text_iterator iterator = m.begin(); iterator != m.end(); iterator++)
+    for(text_iterator iterator = texts.begin(); iterator != texts.end(); iterator++)
     {
         switch(iterator->first) {
             case 'gameloaded':
