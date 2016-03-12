@@ -482,7 +482,7 @@ CGHost :: CGHost( CConfig *CFG )
 	else
 		CONSOLE_Print( "[GHOST] acting as Warcraft III: Reign of Chaos" );
         
-	SetConfigs( CFG );
+    m_Warcraft3Path = UTIL_AddPathSeperator( CFG->GetString( "bot_war3path", "C:\\Program Files\\Warcraft III\\" ) );
 	ExtractScripts( );
 
 	CONSOLE_Print( "[GHOST] GHost++ Version " + m_Version + " (with MySQL support)" );
@@ -1051,18 +1051,8 @@ void CGHost :: EventGameDeleted( CBaseGame *game )
 
 void CGHost :: ReloadConfigs( )
 {
-	CConfig CFG;
-	CFG.Read( "default.cfg" );
-	CFG.Read( gCFGFile );
-	SetConfigs( &CFG );
-}
-
-void CGHost :: SetConfigs( CConfig *CFG )
-{
-	// this doesn't set EVERY config value since that would potentially require reconfiguring the battle.net connections
-	// it just set the easily reloadable values
-	m_Warcraft3Path = UTIL_AddPathSeperator( CFG->GetString( "bot_war3path", "C:\\Program Files\\Warcraft III\\" ) );
-	m_BindAddress = CFG->GetString( "bot_bindaddress", string( ) );
+    m_CallableGetBotConfig = m_DB->ThreadedGetBotConfigs( );
+    m_CallableGetBotConfigText = m_DB->ThreadedGetBotConfigTexts( );
 }
 
 void CGHost :: ExtractScripts( )
