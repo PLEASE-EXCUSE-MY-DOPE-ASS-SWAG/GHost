@@ -159,6 +159,7 @@ public:
 	// other functions
 
 	void ExtractScripts( );
+    void ReloadConfigs( );
 	void CreateGame( CMap *map, unsigned char gameState, bool saveGame, string gameName, string ownerName, string creatorName, string creatorServer, bool whisper );
     
     // configs
