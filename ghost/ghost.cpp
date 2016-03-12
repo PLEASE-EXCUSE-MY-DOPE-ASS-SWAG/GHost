@@ -1316,17 +1316,17 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
         } else if(iterator->first == "bot_bindaddress") {
             m_BindAddress = iterator->second;
         } else if(iterator->first == "bot_hostport") {
-            m_HostPort = iterator->second;
+            m_HostPort = UTIL_ToUInt32(iterator->second);
         } else if(iterator->first == "bot_reconnect") {
             m_Reconnect = UTIL_ToUInt32(iterator->second);
         } else if(iterator->first == "bot_reconnectport") {
-            m_ReconnectPort = iterator->second;
+            m_ReconnectPort = UTIL_ToUInt32(iterator->second);
         } else if(iterator->first == "bot_reconnectwaittime") {
             m_ReconnectWaitTime = UTIL_ToUInt32(iterator->second);
         } else if(iterator->first == "bot_maxgames") {
             m_MaxGames = UTIL_ToUInt32(iterator->second);
         } else if(iterator->first == "bot_commandtrigger") {
-            m_CommandTrigger = iterator->second;
+            m_CommandTrigger = iterator->second[0];
         } else if(iterator->first == "bot_mapcfgpath") {
             m_MapCFGPath = iterator->second;
         } else if(iterator->first == "bot_savegamepath") {
@@ -1334,13 +1334,13 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
         } else if(iterator->first == "bot_mappath") {
             m_MapPath = iterator->second;
         } else if(iterator->first == "bot_savereplays") {
-            m_SaveReplays = iterator->second;
+            m_SaveReplays = UTIL_ToUInt32(iterator->second);
         } else if(iterator->first == "bot_replaypath") {
             m_ReplayPath = iterator->second;
         } else if(iterator->first == "replay_war3version") {
-            m_ReplayWar3Version = iterator->second;
+            m_ReplayWar3Version = UTIL_ToUInt32(iterator->second);
         } else if(iterator->first == "replay_buildnumber") {
-            m_ReplayBuildNumber = iterator->second;
+            m_ReplayBuildNumber = UTIL_ToUInt32(iterator->second);
         } else if(iterator->first == "bot_virtualhostname") {
             m_VirtualHostName = iterator->second;
         } else if(iterator->first == "bot_hideipaddresses") {
@@ -1395,7 +1395,7 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
             m_LANWar3Version = UTIL_ToUInt32(iterator->second);
         } else if(iterator->first == "udp_broadcasttarget") {
             m_UDPSocket = new CUDPSocket( );
-            m_UDPSocket->SetBroadcastTarget( CFG->GetString( iterator->second );
+            m_UDPSocket->SetBroadcastTarget( iterator->second );
         } else if(iterator->first == "udp_dontroute") {
             m_UDPSocket->SetDontRoute( UTIL_ToUInt32(iterator->second) );
         } else if(iterator->first == "autohost_maxgames") {
