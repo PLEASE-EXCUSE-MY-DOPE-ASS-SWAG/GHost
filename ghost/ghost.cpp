@@ -946,6 +946,7 @@ bool CGHost :: Update( long usecBlock )
     if( m_CallableGetGameId && m_CallableGetGameId->GetReady( ) )
     {
         m_NewGameId = m_CallableGetGameId->GetResult( );
+        CONSOLE_Print("Got new gameid: " + UTIL_ToString(m_NewGameId));
         m_DB->RecoverCallable( m_CallableGetGameId );
         delete m_CallableGetGameId;
         m_CallableGetGameId = NULL;
