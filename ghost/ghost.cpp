@@ -1408,6 +1408,8 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
             m_BNetCollection[bnetNumber][iterator->first.substr(pos)] = iterator->second;
         }
     }
+    
+    ConnectToBNets( );
 }
 
 void CGHost :: ParseConfigTexts( map<string, vector<string>> texts )
@@ -1426,4 +1428,127 @@ void CGHost :: ParseConfigTexts( map<string, vector<string>> texts )
             CONSOLE_Print("Didn't use '" + iterator->first + "' data!");
         }
     }
+}
+
+
+void CGHost :: ConnectToBNets( )
+{
+    typedef map<int, map<string, string>>::iterator bnet_iterator;
+    uint32_t counter = 0;
+    for(bnet_iterator i = m_BNetCollection.begin(); i != m_BNetCollection.end(); i++)
+    {
+		string Server = "";
+ 		string ServerAlias = "";
+ 		string CDKeyROC = "";
+ 		string CDKeyTFT = "";
+ 		string CountryAbbrev = "DE";
+ 		string Country = "Germany";
+ 		string Locale = "1031";
+ 		string UserName = "";
+ 		string UserPassword = "";
+ 		string FirstChannel = "The Void";
+ 		string RootAdmin = "";
+ 		string BNETCommandTrigger = ".";
+ 		bool HoldFriends = false;
+ 		bool HoldClan = false;
+ 		bool PublicCommands = false;
+ 		unsigned char War3Version = 24;
+ 		BYTEARRAY EXEVersion = {};
+ 		BYTEARRAY EXEVersionHash = {};
+ 		string PasswordHashType = "";
+ 		string PVPGNRealmName = "PvPGN Realm";
+ 		uint32_t MaxMessageLength = 200;
+         
+        typedef map<string, string>::iterator options_iterator;
+        for(options_iterator j = i->second.begin(); j != i->second.end(); j++)
+        {
+            size_t pos = j->first.find_first_of("_") != string::npos;
+            string key = j->first.substr(pos + 1)
+            if(key == "server" ) {
+                Server = i->second;
+            } else if(key == "serveralias") {
+                ServerAlias = i->second;
+            } else if(key == "cdkeyroc") {
+                CDKeyROC = i->second;
+            } else if(key == "cdkeytft") {
+                CDKeyTFT = i->second;
+            } else if(key == "countryabbrev") {
+                CountryAbbrev = i->second;
+            } else if(key == "country") {
+                Country = i->second;
+            } else if(key == "locale") {
+                Locale = i->second;
+            } else if(key == "username") {
+                UserName = i->second;
+            } else if(key == "password") {
+                UserPassword = i->second;
+            } else if(key == "firstchannel") {
+                FirstChannel = i->second;
+            } else if(key == "rootadmin") {
+                RootAdmin = i->second;
+            } else if(key == "commandtrigger") {
+                BNETCommandTrigger = i->second[0];
+            } else if(key == "holdfriends") {
+                HoldFriends = UTIL_ToUInt32(i->second) == 0 ? false : true;
+            } else if(key == "holdclan") {
+                HoldClan = UTIL_ToUInt32(i->second) == 0 ? false : true;
+            } else if(key == "publiccommands") {
+                PublicCommands = UTIL_ToUInt32(i->second) == 0 ? false : true;
+            } else if(key == "custom_war3version") {
+                War3Version = UTIL_ToUInt32(i->second);
+            } else if(key == "custom_exeversion") {
+                EXEVersion = UTIL_ExtractNumbers(i->second, 4);
+            } else if(key == "custom_exeversionhash") {
+                EXEVersionHash = UTIL_ExtractNumbers(i->second, 4);
+            } else if(key == "custom_passwordhashtype") {
+                PasswordHashType = i->second;
+            } else if(key == "custom_pvpgnrealmname") {
+                PVPGNRealmName = i->second;
+            } else if(key == "custom_maxmessagelength") {
+                MaxMessageLength = UTIL_ToUInt32(i->second);
+            }
+        }
+        
+        if( Server.empty( ) )
+            break;
+
+        if( CDKeyROC.empty( ) )
+        {
+            CONSOLE_Print( "[GHOST] missing " + Prefix + "cdkeyroc, skipping this battle.net connection" );
+            continue;
+        }
+
+        if( m_TFT && CDKeyTFT.empty( ) )
+        {
+            CONSOLE_Print( "[GHOST] missing " + Prefix + "cdkeytft, skipping this battle.net connection" );
+            continue;
+        }
+
+        if( UserName.empty( ) )
+        {
+            CONSOLE_Print( "[GHOST] missing " + Prefix + "username, skipping this battle.net connection" );
+            continue;
+        }
+
+        if( UserPassword.empty( ) )
+        {
+            CONSOLE_Print( "[GHOST] missing " + Prefix + "password, skipping this battle.net connection" );
+            continue;
+        }
+
+        CONSOLE_Print( "[GHOST] found battle.net connection #" + UTIL_ToString( i ) + " for server [" + Server + "]" );
+
+        if( Locale == "system" )
+        {
+#ifdef WIN32
+            CONSOLE_Print( "[GHOST] using system locale of " + UTIL_ToString( LocaleID ) );
+#else
+            CONSOLE_Print( "[GHOST] unable to get system locale, using default locale of 1033" );
+#endif
+        }
+
+        m_BNETs.push_back( new CBNET( this, Server, ServerAlias, "", 0, 0, CDKeyROC, CDKeyTFT, CountryAbbrev, Country, LocaleID, UserName, UserPassword, FirstChannel, RootAdmin, BNETCommandTrigger[0], HoldFriends, HoldClan, PublicCommands, War3Version, EXEVersion, EXEVersionHash, PasswordHashType, PVPGNRealmName, MaxMessageLength, counter) );
+        counter++;
+    }
+    
 }

@@ -166,6 +166,7 @@ public:
     
     void ParseConfigValues( map<string, string> configs );
     void ParseConfigTexts( map<string, vector<string>> texts );
+    void ConnectToBNets( );
 };
 
 #endif
