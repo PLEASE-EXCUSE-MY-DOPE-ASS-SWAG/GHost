@@ -1406,6 +1406,7 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
                 bnetNumber = UTIL_ToUInt32(swaggynumber);
                 pos = 6;
             }
+            CONSOLE_Print("Detected new bnet value! BNet ["+UTIL_ToString(bnetNumber)+"] with key ["+iterator->first+"] and value ["+iterator->second+"]");
             m_BNetCollection[bnetNumber][iterator->first.substr(pos)] = iterator->second;
         }
     }
