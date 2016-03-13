@@ -1308,7 +1308,6 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
     
     for(config_iterator iterator = configs.begin(); iterator != configs.end(); iterator++)
     {
-        CONSOLE_Print("mapped: " + iterator->first + " to: " + iterator->second);
         if(iterator->first == "bot_language") {
             delete m_Language;
             m_Language = new CLanguage( iterator->second );
@@ -1421,6 +1420,21 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
     }
     
     ConnectToBNets( );
+    
+    if(! m_CurrentGame) {
+        if( m_DefaultMap.size( ) < 4 || m_DefaultMap.substr( m_DefaultMap.size( ) - 4 ) != ".cfg" )
+    	{
+    		m_DefaultMap += ".cfg";
+    		CONSOLE_Print( "[GHOST] adding \".cfg\" to default map -> new default is [" + m_DefaultMap + "]" );
+    	}
+ 
+    	CConfig MapCFG;
+    	MapCFG.Read( m_MapCFGPath + m_DefaultMap );
+    	m_Map = new CMap( this, &MapCFG, m_MapCFGPath + m_DefaultMap );
+    
+    	m_AutoHostMap = new CMap( *m_Map );
+    	m_SaveGame = new CSaveGame( );
+    }
 }
 
 void CGHost :: ParseConfigTexts( map<string, vector<string>> texts )
