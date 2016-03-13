@@ -1366,7 +1366,6 @@ map<string, map<uint32_t, string> > MySQLGetLanguages( void *conn, string *error
             
 			while( Row.size( ) == 3 )
 			{
-                m_Languages[Row[1]][Row[0]] = Row[2];
 				Row = MySQLFetchRow( Result );
 			}
 
