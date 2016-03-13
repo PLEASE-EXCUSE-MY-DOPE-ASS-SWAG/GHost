@@ -756,14 +756,14 @@ void CMap :: Load( map<string, string> config )
 	}
 
 	m_MapSHA1 = MapSHA1;
-	m_MapSpeed = UTIL_ToUInt32( config["map_speed", MAPSPEED_FAST );
-	m_MapVisibility = UTIL_ToUInt32( config["map_visibility", MAPVIS_DEFAULT );
-	m_MapObservers = UTIL_ToUInt32( config["map_observers", MAPOBS_NONE );
-	m_MapFlags = UTIL_ToUInt32( config["map_flags", MAPFLAG_TEAMSTOGETHER | MAPFLAG_FIXEDTEAMS );
-	m_MapFilterMaker = UTIL_ToUInt32( config["map_filter_maker", MAPFILTER_MAKER_USER );
-	m_MapFilterType = UTIL_ToUInt32( config["map_filter_type"]);
-	m_MapFilterSize = UTIL_ToUInt32( config["map_filter_size", MAPFILTER_SIZE_LARGE );
-	m_MapFilterObs = UTIL_ToUInt32( config["map_filter_obs", MAPFILTER_OBS_NONE );
+	m_MapSpeed = config.find("map_speed" ) == config.end() ? UTIL_ToUInt32( config["map_speed"] ) : MAPSPEED_FAST ;
+	m_MapVisibility = config.find("map_visibility" ) == config.end() ? UTIL_ToUInt32( config["map_visibility"] ) : MAPVIS_DEFAULT;
+	m_MapObservers = config.find("map_observers" ) == config.end() ? UTIL_ToUInt32( config["map_observers"] ) : MAPOBS_NONE;
+	m_MapFlags = config.find("map_flags" ) == config.end() ? UTIL_ToUInt32( config["map_flags"] ) : MAPFLAG_TEAMSTOGETHER | MAPFLAG_FIXEDTEAMS;
+	m_MapFilterMaker = config.find("map_filter_maker" ) == config.end() ? UTIL_ToUInt32( config["map_filter_maker"] ) : MAPFILTER_MAKER_USER;
+	m_MapFilterType = config.find("map_filter_type" ) == config.end() ? UTIL_ToUInt32( config["map_filter_type"]) : 0;
+	m_MapFilterSize = config.find("map_filter_size" ) == config.end() ? UTIL_ToUInt32( config["map_filter_size"] ) : MAPFILTER_SIZE_LARGE;
+	m_MapFilterObs = config.find("map_filter_obs" ) == config.end() ? UTIL_ToUInt32( config["map_filter_obs"] ) : MAPFILTER_OBS_NONE;
 
 	// todotodo: it might be possible for MapOptions to legitimately be zero so this is not a valid way of checking if it wasn't parsed out earlier
 
