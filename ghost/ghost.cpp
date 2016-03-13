@@ -1406,7 +1406,6 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
                 bnetNumber = UTIL_ToUInt32(swaggynumber);
                 pos = 6;
             }
-            CONSOLE_Print("Detected new bnet value! BNet ["+UTIL_ToString(bnetNumber)+"] with key ["+iterator->first+"] and value ["+iterator->second+"]");
             m_BNetCollection[bnetNumber][iterator->first.substr(pos)] = iterator->second;
         }
     }
@@ -1439,33 +1438,33 @@ void CGHost :: ConnectToBNets( )
     uint32_t counter = 0;
     for(bnet_iterator i = m_BNetCollection.begin(); i != m_BNetCollection.end(); i++)
     {
-		string Server = "";
- 		string ServerAlias = "";
- 		string CDKeyROC = "";
- 		string CDKeyTFT = "";
- 		string CountryAbbrev = "DE";
- 		string Country = "Germany";
- 		string Locale = "1031";
- 		string UserName = "";
- 		string UserPassword = "";
- 		string FirstChannel = "The Void";
- 		string RootAdmin = "";
- 		string BNETCommandTrigger = ".";
- 		bool HoldFriends = false;
- 		bool HoldClan = false;
- 		bool PublicCommands = false;
- 		unsigned char War3Version = 24;
- 		BYTEARRAY EXEVersion = {};
- 		BYTEARRAY EXEVersionHash = {};
- 		string PasswordHashType = "";
- 		string PVPGNRealmName = "PvPGN Realm";
- 		uint32_t MaxMessageLength = 200;
+	string Server = "";
+	string ServerAlias = "";
+	string CDKeyROC = "";
+	string CDKeyTFT = "";
+	string CountryAbbrev = "DE";
+	string Country = "Germany";
+	string Locale = "1031";
+	string UserName = "";
+	string UserPassword = "";
+	string FirstChannel = "The Void";
+	string RootAdmin = "";
+	string BNETCommandTrigger = ".";
+	bool HoldFriends = false;
+	bool HoldClan = false;
+	bool PublicCommands = false;
+	unsigned char War3Version = 24;
+	BYTEARRAY EXEVersion = {};
+	BYTEARRAY EXEVersionHash = {};
+	string PasswordHashType = "";
+ 	string PVPGNRealmName = "PvPGN Realm";
+ 	uint32_t MaxMessageLength = 200;
          
         typedef map<string, string>::iterator options_iterator;
         for(options_iterator j = i->second.begin(); j != i->second.end(); j++)
         {
             size_t pos = j->first.find_first_of("_") != string::npos;
-            string key = j->first.substr(pos + 1);
+            string key = j->first.substr(pos);
             if(key == "server" ) {
                 Server = j->second;
             } else if(key == "serveralias") {
@@ -1512,7 +1511,10 @@ void CGHost :: ConnectToBNets( )
         }
         
         if( Server.empty( ) )
+	{
+	    CONSOLE_Print("Didn't found 'Server'");
             break;
+	}
 
         if( CDKeyROC.empty( ) )
         {
