@@ -157,9 +157,6 @@ CBNET :: ~CBNET( )
 
 	for( vector<PairedDPSCheck> :: iterator i = m_PairedDPSChecks.begin( ); i != m_PairedDPSChecks.end( ); i++ )
 		m_GHost->m_Callables.push_back( i->second );
-
-	for( vector<CDBBan *> :: iterator i = m_Bans.begin( ); i != m_Bans.end( ); i++ )
-		delete *i;
 }
 
 BYTEARRAY CBNET :: GetUniqueName( )

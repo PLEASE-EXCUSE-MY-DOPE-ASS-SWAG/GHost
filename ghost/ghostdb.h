@@ -276,8 +276,8 @@ public:
 	CCallableAdminList( string nServer ) : CBaseCallable( ), m_Server( nServer ) { }
 	virtual ~CCallableAdminList( );
 
-	virtual vector<string> GetResult( )					{ return m_Result; }
-	virtual void SetResult( vector<string> nResult )	{ m_Result = nResult; }
+	virtual map<string, uint32_t> GetResult( )					{ return m_Result; }
+	virtual void SetResult( map<string, uint32_t> nResult )	{ m_Result = nResult; }
 };
 
 class CCallableBanCount : virtual public CBaseCallable
