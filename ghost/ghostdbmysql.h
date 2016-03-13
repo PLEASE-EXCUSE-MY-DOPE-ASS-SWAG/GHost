@@ -255,7 +255,7 @@ uint32_t MySQLCreatePlayerId( void *conn, string *error, uint32_t botid, string 
 uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid );
 map<string, string> MySQLGetBotConfigs( );
 map<string, vector<string> > MySQLGetBotConfigTexts( );
-map<string, map<integer, string> > MySQLGetLanguages( );
+map<string, map<uint32_t, string> > MySQLGetLanguages( );
 
 //
 // MySQL Callables
