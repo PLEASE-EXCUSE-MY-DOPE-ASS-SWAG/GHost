@@ -168,16 +168,6 @@ bool CGame :: Update( void *fd, void *send_fd )
 	{
 		if( i->second->GetReady( ) )
 		{
-			if( i->second->GetResult( ) )
-			{
-				for( vector<CBNET *> :: iterator j = m_GHost->m_BNETs.begin( ); j != m_GHost->m_BNETs.end( ); j++ )
-				{
-					if( (*j)->GetServer( ) == i->second->GetServer( ) )
-						(*j)->AddBan( i->second->GetUser( ), i->second->GetIP( ), i->second->GetGameName( ), i->second->GetAdmin( ), i->second->GetReason( ) );
-				}
-
-				SendAllChat( m_GHost->m_Language->PlayerWasBannedByPlayer( i->second->GetServer( ), i->second->GetUser( ), i->first ) );
-			}
 
 			m_GHost->m_DB->RecoverCallable( i->second );
 			delete i->second;
