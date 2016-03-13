@@ -501,7 +501,7 @@ CCallableGetBotConfigs *CGHostDBMySQL :: ThreadedGetBotConfigs( )
 	return Callable;
 }
 
-CCallableGetBotConfigTexts *CGHostDBMySQL :: ThreadedGetBotConfigTexts( )
+CCallableGetBotConfigTexts *CGHostDBMySQL :: ThreadedGetBotConfigTexts( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port )
 {
 	void *Connection = GetIdleConnection( );
 
@@ -514,7 +514,7 @@ CCallableGetBotConfigTexts *CGHostDBMySQL :: ThreadedGetBotConfigTexts( )
 	return Callable;
 }
 
-CCallableGetLanguages *CGHostDBMySQL :: ThreadedGetLanguages( )
+CCallableGetLanguages *CGHostDBMySQL :: ThreadedGetLanguages( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port )
 {
 	void *Connection = GetIdleConnection( );
 
@@ -522,6 +522,19 @@ CCallableGetLanguages *CGHostDBMySQL :: ThreadedGetLanguages( )
 		m_NumConnections++;
 
 	CCallableGetLanguages *Callable = new CMySQLCallableGetLanguages( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
+	CreateThread( Callable );
+	m_OutstandingCallables++;
+	return Callable;
+}
+
+CCallableGetMapConfig *CGHostDBMySQL :: ThreadedGetMapConfig( m_ConfigName, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port )
+{
+	void *Connection = GetIdleConnection( );
+
+	if( !Connection )
+		m_NumConnections++;
+
+	CCallableGetMapConfig *Callable = new CMySQLCallableGetMapConfig( m_ConfigName, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
 	CreateThread( Callable );
 	m_OutstandingCallables++;
 	return Callable;
@@ -1365,6 +1378,39 @@ map<string, map<uint32_t, string> > MySQLGetLanguages( void *conn, string *error
 	return m_Languages;
 }
 
+map<string, string> MySQLGetMapConfig( void *conn, string *error, uint32_t botid, string configname )
+{
+	transform( configname.begin( ), configname.end( ), configname.begin( ), (int(*)(int))tolower );
+    string EscConfigName = MySQLEscapeString( conn, configname );
+    map<string, string> m_Configs;
+	string Query = "SELECT cfg_key, cfg_value FROM oh_mapcfgs WHERE cfg_name ='" + EscConfigName + "';";
+    
+	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+		*error = mysql_error( (MYSQL *)conn );
+    else
+    {
+        MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
+
+		if( Result )
+		{
+			vector<string> Row = MySQLFetchRow( Result );
+            
+            
+			while( Row.size( ) == 2 )
+			{
+                m_Configs[Row[0]] = Row[1];
+				Row = MySQLFetchRow( Result );
+			}
+
+			mysql_free_result( Result );
+		}
+		else
+			*error = mysql_error( (MYSQL *)conn );
+    }
+
+	return m_Configs;
+}
+
 //
 // MySQL Callables
 //
@@ -1672,6 +1718,16 @@ void CMySQLCallableGetLanguages :: operator( )( )
 
 	if( m_Error.empty( ) )
 		m_Result = MySQLGetLanguages( m_Connection, &m_Error, m_SQLBotID );
+
+	Close( );
+}
+
+void CMySQLCallableGetMapConfig :: operator( )( )
+{
+	Init( );
+
+	if( m_Error.empty( ) )
+		m_Result = MySQLGetMapConfig( m_Connection, &m_Error, m_SQLBotID, m_ConfigName );
 
 	Close( );
 }

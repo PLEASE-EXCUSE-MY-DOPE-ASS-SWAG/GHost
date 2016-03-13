@@ -52,6 +52,7 @@ class CCallableGetGameId;
 class CCallableGetBotConfigs;
 class CCallableGetBotConfigTexts;
 class CCallableGetLanguages;
+class CCallableGetMapConfig;
 class CDBBan;
 class CDBGame;
 class CDBGamePlayer;
@@ -112,6 +113,7 @@ public:
     virtual map<string, string> GetBotConfigs( );
     virtual map<string, vector<string> > GetBotConfigTexts( );
     virtual map<string, map<uint32_t, string> > GetLanguages( );
+    virtual map<string, string> GetMapConfig( string configname );
 
 	// threaded database functions
 
@@ -145,6 +147,7 @@ public:
     virtual CCallableGetBotConfigs *ThreadedGetBotConfigs( );
     virtual CCallableGetBotConfigTexts *ThreadedGetBotConfigTexts( );
     virtual CCallableGetLanguages *ThreadedGetLanguages( );
+    virtual CCallableGetMapConfig *ThreadedGetMapConfig( string configname );
 };
 
 //
@@ -654,6 +657,20 @@ public:
 
 	virtual map<string, map<uint32_t, string> > GetResult( )				{ return m_Result; }
 	virtual void SetResult( map<string, map<uint32_t, string> > nResult )	{ m_Result = nResult; }
+};
+
+class CCallableGetMapConfig : virtual public CBaseCallable
+{
+protected:
+	map<string, string> m_Result;
+    string m_ConfigName;
+
+public:
+	CCallableGetMapConfig( string nConfigName ) : CBaseCallable( ), m_ConfigName( nConfigName), m_Result( {} ) { }
+	virtual ~CCallableGetMapConfig( );
+
+	virtual map<string, string> GetResult( )				{ return m_Result; }
+	virtual void SetResult( map<string, string> nResult )	{ m_Result = nResult; }
 };
 
 //

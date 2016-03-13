@@ -219,6 +219,7 @@ public:
     virtual CCallableGetBotConfigs *ThreadedGetBotConfigs( );
     virtual CCallableGetBotConfigTexts *ThreadedGetBotConfigTexts( );
     virtual CCallableGetLanguages *ThreadedGetLanguages( );
+    virtual CCallableGetMapConfig *ThreadedGetMapConfig( string configname );
     
 	virtual void *GetIdleConnection( );
 };
@@ -253,9 +254,10 @@ bool MySQLW3MMDVarAdd( void *conn, string *error, uint32_t botid, uint32_t gamei
 uint32_t MySQLGetPlayerId( void *conn, string *error, uint32_t botid, string user );
 uint32_t MySQLCreatePlayerId( void *conn, string *error, uint32_t botid, string user, string ip, string realm );
 uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid );
-map<string, string> MySQLGetBotConfigs( );
-map<string, vector<string> > MySQLGetBotConfigTexts( );
-map<string, map<uint32_t, string> > MySQLGetLanguages( );
+map<string, string> MySQLGetBotConfigs( void *conn, string *error, uint32_t botid );
+map<string, vector<string> > MySQLGetBotConfigTexts( void *conn, string *error, uint32_t botid );
+map<string, map<uint32_t, string> > MySQLGetLanguages( void *conn, string *error, uint32_t botid );
+map<string, string> MySQLGetMapConfig( void *conn, string *error, uint32_t botid, string configname);
 
 //
 // MySQL Callables
@@ -558,6 +560,16 @@ class CMySQLCallableGetLanguages : public CCallableGetLanguages, public CMySQLCa
 {
 public:
 	CMySQLCallableGetLanguages( void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableGetLanguages( ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
+
+	virtual void operator( )( );
+	virtual void Init( ) { CMySQLCallable :: Init( ); }
+	virtual void Close( ) { CMySQLCallable :: Close( ); }
+};
+
+class CMySQLCallableGetMapConfig : public CCallableGetMapConfig, public CMySQLCallable
+{
+public:
+	CMySQLCallableGetMapConfig( string nConfigName, void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableGetMapConfig( nConfigName ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
 
 	virtual void operator( )( );
 	virtual void Init( ) { CMySQLCallable :: Init( ); }

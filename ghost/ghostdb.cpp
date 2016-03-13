@@ -219,6 +219,11 @@ void CGHostDB :: CreateThread( CBaseCallable *callable )
 	callable->SetReady( true );
 }
 
+map<string, string> CGHostDB :: GetMapConfig( string configname )
+{
+    return {};
+}
+
 CCallableAdminCount *CGHostDB :: ThreadedAdminCount( string server )
 {
 	return NULL;
@@ -364,6 +369,11 @@ CCallableGetLanguages *CGHostDB :: ThreadedGetLanguages( )
 	return NULL;
 }
 
+CCallableGetMapConfig *CGHostDB :: ThreadedGetMapConfig( string configname )
+{
+	return NULL;
+}
+
 //
 // Callables
 //
@@ -505,6 +515,11 @@ CCallableGetBotConfigTexts :: ~CCallableGetBotConfigTexts( )
 }
 
 CCallableGetLanguages :: ~CCallableGetLanguages( )
+{
+
+}
+
+CCallableGetMapConfig :: ~CCallableGetMapConfig( )
 {
 
 }

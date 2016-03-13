@@ -127,7 +127,7 @@ private:
 
 public:
 	CMap( CGHost *nGHost );
-	CMap( CGHost *nGHost, CConfig *CFG, string nCFGFile );
+	CMap( CGHost *nGHost, map<string, string> nConfig );
 	~CMap( );
 
 	bool GetValid( )						{ return m_Valid; }
@@ -159,7 +159,7 @@ public:
 	uint32_t GetMapNumTeams( )				{ return m_MapNumTeams; }
 	vector<CGameSlot> GetSlots( )			{ return m_Slots; }
 
-	void Load( CConfig *CFG, string nCFGFile );
+	void Load( map<string, string> nConfig );
 	void CheckValid( );
 	uint32_t XORRotateLeft( unsigned char *data, uint32_t length );
 };

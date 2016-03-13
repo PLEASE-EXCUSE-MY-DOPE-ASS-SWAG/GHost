@@ -73,10 +73,10 @@ CMap :: CMap( CGHost *nGHost )
 	m_Slots.push_back( CGameSlot( 0, 255, SLOTSTATUS_OPEN, 0, 11, 11, SLOTRACE_RANDOM | SLOTRACE_SELECTABLE ) );
 }
 
-CMap :: CMap( CGHost *nGHost, CConfig *CFG, string nCFGFile )
+CMap :: CMap( CGHost *nGHost, map<string, string> nConfig )
 {
 	m_GHost = nGHost;
-	Load( CFG, nCFGFile );
+	Load( nConfig );
 }
 
 CMap :: ~CMap( )
@@ -249,14 +249,13 @@ unsigned char CMap :: GetMapLayoutStyle( )
 	return 3;
 }
 
-void CMap :: Load( CConfig *CFG, string nCFGFile )
+void CMap :: Load( map<string, string> config )
 {
 	m_Valid = true;
-	m_CFGFile = nCFGFile;
 
 	// load the map data
 
-	m_MapLocalPath = CFG->GetString( "map_localpath", string( ) );
+	m_MapLocalPath = config["map_localpath"];
 	m_MapData.clear( );
 
 	if( !m_MapLocalPath.empty( ) )
@@ -716,110 +715,110 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 	if( MapMPQReady )
 		SFileCloseArchive( MapMPQ );
 
-	m_MapPath = CFG->GetString( "map_path", string( ) );
+	m_MapPath = config["map_path"];
 
 	if( MapSize.empty( ) )
-		MapSize = UTIL_ExtractNumbers( CFG->GetString( "map_size", string( ) ), 4 );
-	else if( CFG->Exists( "map_size" ) )
+		MapSize = UTIL_ExtractNumbers( config["map_size"], 4 );
+	else if( config.find("map_size" ) == config.end() )
 	{
-		CONSOLE_Print( "[MAP] overriding calculated map_size with config value map_size = " + CFG->GetString( "map_size", string( ) ) );
-		MapSize = UTIL_ExtractNumbers( CFG->GetString( "map_size", string( ) ), 4 );
+		CONSOLE_Print( "[MAP] overriding calculated map_size with config value map_size = " + config["map_size"] );
+		MapSize = UTIL_ExtractNumbers( config["map_size"], 4 );
 	}
 
 	m_MapSize = MapSize;
 
 	if( MapInfo.empty( ) )
-		MapInfo = UTIL_ExtractNumbers( CFG->GetString( "map_info", string( ) ), 4 );
-	else if( CFG->Exists( "map_info" ) )
+		MapInfo = UTIL_ExtractNumbers( config["map_info"], 4 );
+	else if( config.find("map_info" ) == config.end() )
 	{
-		CONSOLE_Print( "[MAP] overriding calculated map_info with config value map_info = " + CFG->GetString( "map_info", string( ) ) );
-		MapInfo = UTIL_ExtractNumbers( CFG->GetString( "map_info", string( ) ), 4 );
+		CONSOLE_Print( "[MAP] overriding calculated map_info with config value map_info = " + config["map_info"] );
+		MapInfo = UTIL_ExtractNumbers( config["map_info"], 4 );
 	}
 
 	m_MapInfo = MapInfo;
 
 	if( MapCRC.empty( ) )
-		MapCRC = UTIL_ExtractNumbers( CFG->GetString( "map_crc", string( ) ), 4 );
-	else if( CFG->Exists( "map_crc" ) )
+		MapCRC = UTIL_ExtractNumbers( config["map_crc"], 4 );
+	else if( config.find("map_crc" ) == config.end() )
 	{
-		CONSOLE_Print( "[MAP] overriding calculated map_crc with config value map_crc = " + CFG->GetString( "map_crc", string( ) ) );
-		MapCRC = UTIL_ExtractNumbers( CFG->GetString( "map_crc", string( ) ), 4 );
+		CONSOLE_Print( "[MAP] overriding calculated map_crc with config value map_crc = " + config["map_crc"] );
+		MapCRC = UTIL_ExtractNumbers( config["map_crc"], 4 );
 	}
 
 	m_MapCRC = MapCRC;
 
 	if( MapSHA1.empty( ) )
-		MapSHA1 = UTIL_ExtractNumbers( CFG->GetString( "map_sha1", string( ) ), 20 );
-	else if( CFG->Exists( "map_sha1" ) )
+		MapSHA1 = UTIL_ExtractNumbers( config["map_sha1"], 20 );
+	else if( config.find("map_sha1" ) == config.end() )
 	{
-		CONSOLE_Print( "[MAP] overriding calculated map_sha1 with config value map_sha1 = " + CFG->GetString( "map_sha1", string( ) ) );
-		MapSHA1 = UTIL_ExtractNumbers( CFG->GetString( "map_sha1", string( ) ), 20 );
+		CONSOLE_Print( "[MAP] overriding calculated map_sha1 with config value map_sha1 = " + config["map_sha1"] );
+		MapSHA1 = UTIL_ExtractNumbers( config["map_sha1"], 20 );
 	}
 
 	m_MapSHA1 = MapSHA1;
-	m_MapSpeed = CFG->GetInt( "map_speed", MAPSPEED_FAST );
-	m_MapVisibility = CFG->GetInt( "map_visibility", MAPVIS_DEFAULT );
-	m_MapObservers = CFG->GetInt( "map_observers", MAPOBS_NONE );
-	m_MapFlags = CFG->GetInt( "map_flags", MAPFLAG_TEAMSTOGETHER | MAPFLAG_FIXEDTEAMS );
-	m_MapFilterMaker = CFG->GetInt( "map_filter_maker", MAPFILTER_MAKER_USER );
-	m_MapFilterType = CFG->GetInt( "map_filter_type", 0 );
-	m_MapFilterSize = CFG->GetInt( "map_filter_size", MAPFILTER_SIZE_LARGE );
-	m_MapFilterObs = CFG->GetInt( "map_filter_obs", MAPFILTER_OBS_NONE );
+	m_MapSpeed = UTIL_ToUInt32( config["map_speed", MAPSPEED_FAST );
+	m_MapVisibility = UTIL_ToUInt32( config["map_visibility", MAPVIS_DEFAULT );
+	m_MapObservers = UTIL_ToUInt32( config["map_observers", MAPOBS_NONE );
+	m_MapFlags = UTIL_ToUInt32( config["map_flags", MAPFLAG_TEAMSTOGETHER | MAPFLAG_FIXEDTEAMS );
+	m_MapFilterMaker = UTIL_ToUInt32( config["map_filter_maker", MAPFILTER_MAKER_USER );
+	m_MapFilterType = UTIL_ToUInt32( config["map_filter_type"]);
+	m_MapFilterSize = UTIL_ToUInt32( config["map_filter_size", MAPFILTER_SIZE_LARGE );
+	m_MapFilterObs = UTIL_ToUInt32( config["map_filter_obs", MAPFILTER_OBS_NONE );
 
 	// todotodo: it might be possible for MapOptions to legitimately be zero so this is not a valid way of checking if it wasn't parsed out earlier
 
 	if( MapOptions == 0 )
-		MapOptions = CFG->GetInt( "map_options", 0 );
-	else if( CFG->Exists( "map_options" ) )
+		MapOptions = UTIL_ToUInt32( config["map_options"]);
+	else if( config.find("map_options" ) == config.end() )
 	{
-		CONSOLE_Print( "[MAP] overriding calculated map_options with config value map_options = " + CFG->GetString( "map_options", string( ) ) );
-		MapOptions = CFG->GetInt( "map_options", 0 );
+		CONSOLE_Print( "[MAP] overriding calculated map_options with config value map_options = " + config["map_options"] );
+		MapOptions = UTIL_ToUInt32( config["map_options"]);
 	}
 
 	m_MapOptions = MapOptions;
 
 	if( MapWidth.empty( ) )
-		MapWidth = UTIL_ExtractNumbers( CFG->GetString( "map_width", string( ) ), 2 );
-	else if( CFG->Exists( "map_width" ) )
+		MapWidth = UTIL_ExtractNumbers( config["map_width"], 2 );
+	else if( config.find("map_width" ) == config.end() )
 	{
-		CONSOLE_Print( "[MAP] overriding calculated map_width with config value map_width = " + CFG->GetString( "map_width", string( ) ) );
-		MapWidth = UTIL_ExtractNumbers( CFG->GetString( "map_width", string( ) ), 2 );
+		CONSOLE_Print( "[MAP] overriding calculated map_width with config value map_width = " + config["map_width"] );
+		MapWidth = UTIL_ExtractNumbers( config["map_width"], 2 );
 	}
 
 	m_MapWidth = MapWidth;
 
 	if( MapHeight.empty( ) )
-		MapHeight = UTIL_ExtractNumbers( CFG->GetString( "map_height", string( ) ), 2 );
-	else if( CFG->Exists( "map_height" ) )
+		MapHeight = UTIL_ExtractNumbers( config["map_height"], 2 );
+	else if( config.find("map_height") == config.end() )
 	{
-		CONSOLE_Print( "[MAP] overriding calculated map_height with config value map_height = " + CFG->GetString( "map_height", string( ) ) );
-		MapHeight = UTIL_ExtractNumbers( CFG->GetString( "map_height", string( ) ), 2 );
+		CONSOLE_Print( "[MAP] overriding calculated map_height with config value map_height = " + config["map_height"] );
+		MapHeight = UTIL_ExtractNumbers( config["map_height"], 2 );
 	}
 
 	m_MapHeight = MapHeight;
-	m_MapType = CFG->GetString( "map_type", string( ) );
-	m_MapMatchMakingCategory = CFG->GetString( "map_matchmakingcategory", string( ) );
-	m_MapStatsW3MMDCategory = CFG->GetString( "map_statsw3mmdcategory", string( ) );
-	m_MapDefaultHCL = CFG->GetString( "map_defaulthcl", string( ) );
-	m_MapDefaultPlayerScore = CFG->GetInt( "map_defaultplayerscore", 1000 );
-	m_MapLoadInGame = CFG->GetInt( "map_loadingame", 0 ) == 0 ? false : true;
+	m_MapType = config["map_type"];
+	m_MapMatchMakingCategory = config["map_matchmakingcategory"];
+	m_MapStatsW3MMDCategory = config["map_statsw3mmdcategory"];
+	m_MapDefaultHCL = config["map_defaulthcl"];
+	m_MapDefaultPlayerScore = UTIL_ToUInt32( config["map_defaultplayerscore", 1000 );
+	m_MapLoadInGame = UTIL_ToUInt32( config["map_loadingame", 0 ) == 0 ? false : true;
 
 	if( MapNumPlayers == 0 )
-		MapNumPlayers = CFG->GetInt( "map_numplayers", 0 );
-	else if( CFG->Exists( "map_numplayers" ) )
+		MapNumPlayers = UTIL_ToUInt32( config["map_numplayers"]);
+	else if( config.find("map_numplayers" ) == config.end() )
 	{
-		CONSOLE_Print( "[MAP] overriding calculated map_numplayers with config value map_numplayers = " + CFG->GetString( "map_numplayers", string( ) ) );
-		MapNumPlayers = CFG->GetInt( "map_numplayers", 0 );
+		CONSOLE_Print( "[MAP] overriding calculated map_numplayers with config value map_numplayers = " + config["map_numplayers"] );
+		MapNumPlayers = UTIL_ToUInt32( config["map_numplayers"]);
 	}
 
 	m_MapNumPlayers = MapNumPlayers;
 
 	if( MapNumTeams == 0 )
-		MapNumTeams = CFG->GetInt( "map_numteams", 0 );
-	else if( CFG->Exists( "map_numteams" ) )
+		MapNumTeams = UTIL_ToUInt32( config["map_numteams"]);
+	else if( config.find("map_numteams" ) == config.end() )
 	{
-		CONSOLE_Print( "[MAP] overriding calculated map_numteams with config value map_numteams = " + CFG->GetString( "map_numteams", string( ) ) );
-		MapNumTeams = CFG->GetInt( "map_numteams", 0 );
+		CONSOLE_Print( "[MAP] overriding calculated map_numteams with config value map_numteams = " + config["map_numteams"] );
+		MapNumTeams = UTIL_ToUInt32( config["map_numteams"]);
 	}
 
 	m_MapNumTeams = MapNumTeams;
@@ -828,7 +827,7 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 	{
 		for( uint32_t Slot = 1; Slot <= 12; Slot++ )
 		{
-			string SlotString = CFG->GetString( "map_slot" + UTIL_ToString( Slot ), string( ) );
+			string SlotString = config["map_slot" + UTIL_ToString( Slot ), string( ) );
 
 			if( SlotString.empty( ) )
 				break;
@@ -837,14 +836,14 @@ void CMap :: Load( CConfig *CFG, string nCFGFile )
 			Slots.push_back( CGameSlot( SlotData ) );
 		}
 	}
-	else if( CFG->Exists( "map_slot1" ) )
+	else if( config.find("map_slot1" ) == config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding slots" );
 		Slots.clear( );
 
 		for( uint32_t Slot = 1; Slot <= 12; Slot++ )
 		{
-			string SlotString = CFG->GetString( "map_slot" + UTIL_ToString( Slot ), string( ) );
+			string SlotString = config["map_slot" + UTIL_ToString( Slot ), string( ) );
 
 			if( SlotString.empty( ) )
 				break;

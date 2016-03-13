@@ -977,6 +977,17 @@ bool CGHost :: Update( long usecBlock )
         m_CallableGetLanguages = NULL;
     }
 
+    if( m_CallableGetMapConfig && m_CallableGetMapConfig->GetReady( )) {
+        if(! m_CurrentGame ){
+            m_Map = new CMap( this, m_CallableGetMapConfig->GetResult( ) );
+            m_AutoHostMap = new CMap( *m_Map );
+        }
+        
+        m_DB->RecoverCallable( m_CallableGetMapConfig );
+        delete m_CallableGetMapConfig;
+        m_CallableGetMapConfig = NULL;
+    }
+    
 	return m_Exiting || AdminExit || BNETExit;
 }
 
@@ -1422,17 +1433,8 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
     ConnectToBNets( );
     
     if(! m_CurrentGame) {
-        if( m_DefaultMap.size( ) < 4 || m_DefaultMap.substr( m_DefaultMap.size( ) - 4 ) != ".cfg" )
-    	{
-    		m_DefaultMap += ".cfg";
-    		CONSOLE_Print( "[GHOST] adding \".cfg\" to default map -> new default is [" + m_DefaultMap + "]" );
-    	}
+        m_CallableGetMapConfig = m_DB->ThreadedGetMapConfig( m_DefaultMap );
  
-    	CConfig MapCFG;
-    	MapCFG.Read( m_MapCFGPath + m_DefaultMap );
-    	m_Map = new CMap( this, &MapCFG, m_MapCFGPath + m_DefaultMap );
-    
-    	m_AutoHostMap = new CMap( *m_Map );
     	m_SaveGame = new CSaveGame( );
     }
 }
@@ -1564,7 +1566,7 @@ void CGHost :: ConnectToBNets( )
             continue;
         }
 
-        CONSOLE_Print( "[GHOST] found battle.net connection #" + UTIL_ToString( counter ) + " for server [" + Server + "]" );
+        CONSOLE_Print( "[GHOST] found battle.net connection for server [" + Server + "]" );
 
         m_BNETs.push_back( new CBNET( this, Server, ServerAlias, "", 0, 0, CDKeyROC, CDKeyTFT, CountryAbbrev, Country, UTIL_ToUInt32(Locale), UserName, UserPassword, FirstChannel, RootAdmin, BNETCommandTrigger[0], HoldFriends, HoldClan, PublicCommands, War3Version, EXEVersion, EXEVersionHash, PasswordHashType, PVPGNRealmName, MaxMessageLength, counter) );
         counter++;
