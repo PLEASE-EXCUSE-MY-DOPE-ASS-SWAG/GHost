@@ -649,7 +649,7 @@ protected:
 	map<string, map<uint32_t, string> > m_Result;
 
 public:
-	CCallableGetXLanguages( ) : CBaseCallable( ), m_Result( {} ) { }
+	CCallableGetLanguages( ) : CBaseCallable( ), m_Result( {} ) { }
 	virtual ~CCallableGetLanguages( );
 
 	virtual map<string, map<uint32_t, string> > GetResult( )				{ return m_Result; }
