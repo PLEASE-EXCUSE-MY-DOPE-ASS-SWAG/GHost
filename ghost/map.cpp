@@ -40,7 +40,6 @@ CMap :: CMap( CGHost *nGHost )
 	CONSOLE_Print( "[MAP] using hardcoded Emerald Gardens map data for Warcraft 3 version 1.24 & 1.24b" );
 	m_GHost = nGHost;
 	m_Valid = true;
-	m_MapPath = "Maps\\FrozenThrone\\(12)EmeraldGardens.w3x";
 	m_MapSize = UTIL_ExtractNumbers( "174 221 4 0", 4 );
 	m_MapInfo = UTIL_ExtractNumbers( "251 57 68 98", 4 );
 	m_MapCRC = UTIL_ExtractNumbers( "108 250 204 59", 4 );
@@ -712,8 +711,6 @@ void CMap :: Load( map<string, string> config )
 	if( MapMPQReady )
 		SFileCloseArchive( MapMPQ );
 
-	m_MapPath = config["map_path"];
-
 	if( MapSize.empty( ) )
 		MapSize = UTIL_ExtractNumbers( config["map_size"], 4 );
 	else if( config.find("map_size" ) == config.end() )
@@ -878,17 +875,6 @@ void CMap :: Load( map<string, string> config )
 void CMap :: CheckValid( )
 {
 	// todotodo: should this code fix any errors it sees rather than just warning the user?
-
-	if( m_MapPath.empty( ) || m_MapPath.length( ) >= 50 )
-	{
-		m_Valid = false;
-		CONSOLE_Print( "[MAP] invalid map_path detected" );
-	}
-	else if( m_MapPath[0] == '\\' )
-		CONSOLE_Print( "[MAP] warning - map_path starts with '\\', any replays saved by GHost++ will not be playable in Warcraft III" );
-
-	if( m_MapPath.find( '/' ) != string :: npos )
-		CONSOLE_Print( "[MAP] warning - map_path contains forward slashes '/' but it must use Windows style back slashes '\\'" );
 
 	if( m_MapSize.size( ) != 4 )
 	{
