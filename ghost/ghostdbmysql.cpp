@@ -488,7 +488,7 @@ CCallableGetGameId *CGHostDBMySQL :: ThreadedGetGameId( )
 	return Callable;
 }
 
-CCallableGetBotConfigs *CGHostDBMySQL :: ThreadedGetBotConfigs( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port )
+CCallableGetBotConfigs *CGHostDBMySQL :: ThreadedGetBotConfigs(  )
 {
 	void *Connection = GetIdleConnection( );
 
@@ -501,7 +501,7 @@ CCallableGetBotConfigs *CGHostDBMySQL :: ThreadedGetBotConfigs( Connection, m_Bo
 	return Callable;
 }
 
-CCallableGetBotConfigTexts *CGHostDBMySQL :: ThreadedGetBotConfigTexts( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port )
+CCallableGetBotConfigTexts *CGHostDBMySQL :: ThreadedGetBotConfigTexts( )
 {
 	void *Connection = GetIdleConnection( );
 
@@ -514,7 +514,7 @@ CCallableGetBotConfigTexts *CGHostDBMySQL :: ThreadedGetBotConfigTexts( Connecti
 	return Callable;
 }
 
-CCallableGetLanguages *CGHostDBMySQL :: ThreadedGetLanguages( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port )
+CCallableGetLanguages *CGHostDBMySQL :: ThreadedGetLanguages( )
 {
 	void *Connection = GetIdleConnection( );
 
@@ -527,7 +527,7 @@ CCallableGetLanguages *CGHostDBMySQL :: ThreadedGetLanguages( Connection, m_BotI
 	return Callable;
 }
 
-CCallableGetMapConfig *CGHostDBMySQL :: ThreadedGetMapConfig( m_ConfigName, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port )
+CCallableGetMapConfig *CGHostDBMySQL :: ThreadedGetMapConfig( m_ConfigName )
 {
 	void *Connection = GetIdleConnection( );
 
