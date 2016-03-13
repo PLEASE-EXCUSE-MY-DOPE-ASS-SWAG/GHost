@@ -370,8 +370,8 @@ CGHost :: CGHost( CConfig *CFG )
     /* load configs */
     m_CallableGetBotConfig = m_DB->ThreadedGetBotConfigs( );
     m_CallableGetBotConfigText = m_DB->ThreadedGetBotConfigTexts( );
-    m_CallableAdminLists = m_DB->ThreadedGetAdminList( );
-    m_Aliases = m_DB->ThreadedGetAliases( );
+    m_CallableAdminLists = m_DB->ThreadedAdminList( );
+    m_CallableGetAliases = m_DB->ThreadedGetAliases( );
 
 	// get a list of local IP addresses
 	// this list is used elsewhere to determine if a player connecting to the bot is local or not
@@ -960,10 +960,20 @@ bool CGHost :: Update( long usecBlock )
     
     if( m_CallableAdminLists && m_CallableAdminLists->GetReady( )) {
         m_AdminList = m_CallableAdminLists->GetResult( );
+        CONSOLE_Print("[OHSystem] Loaded " + UTIL_ToString(m_AdminList.size()) + " users.");
         
         m_DB->RecoverCallable( m_CallableAdminLists );
         delete m_CallableAdminLists;
         m_CallableAdminLists = NULL;
+    }
+    
+    if( m_CallableGetAliases && m_CallableGetAliases->GetReady( )) {
+        m_Aliases = m_CallableGetAliases->GetResult( );
+        CONSOLE_Print("[OHSystem] Loaded " + UTIL_ToString(m_Aliases.size()) + " aliases.");
+        
+        m_DB->RecoverCallable( m_CallableGetAliases );
+        delete m_CallableGetAliases;
+        m_CallableGetAliases = NULL;
     }
     
 	return m_Exiting || AdminExit || BNETExit;
