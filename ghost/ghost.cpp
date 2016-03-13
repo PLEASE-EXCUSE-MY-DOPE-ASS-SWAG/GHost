@@ -1298,6 +1298,7 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
     
     for(config_iterator iterator = configs.begin(); iterator != configs.end(); iterator++)
     {
+        CONSOLE_Print("mapped: " + iterator->first + " to: " + iterator->second);
         if(iterator->first == "bot_language") {
             delete m_Language;
             m_Language = new CLanguage( iterator->second );
