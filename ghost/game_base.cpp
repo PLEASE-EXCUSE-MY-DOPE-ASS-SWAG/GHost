@@ -132,6 +132,7 @@ CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16
 	m_Lagging = false;
 	m_AutoSave = m_GHost->m_AutoSave;
 	m_MatchMaking = false;
+    m_LastGameUpdateTime = GetTime();
 
 	if( m_SaveGame )
 	{
@@ -458,7 +459,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 	    if(i->second->GetReady()) {
             m_GHost->m_DB->RecoverCallable( i->second );
             delete i->second;
-            i = m_GameUpdate.erase( i );
+            i = m_GameUpdates.erase( i );
         }
         else
             ++i;
@@ -1532,6 +1533,9 @@ void CBaseGame :: EventPlayerDeleted( CGamePlayer *player )
 	if( !m_KickVotePlayer.empty( ) )
 		SendAllChat( m_GHost->m_Language->VoteKickCancelled( m_KickVotePlayer ) );
 
+
+    player->SetLeftTime( m_GameTicks / 1000 );
+        
 	m_KickVotePlayer.clear( );
 	m_StartedKickVoteTime = 0;
 }
@@ -4589,12 +4593,12 @@ void CBaseGame :: DoGameUpdate(bool reset) {
     if( !reset ) {
         if( m_GameLoading || m_GameLoaded )
 	    
-            m_GameUpdate.push_back( PairedGameUpdate( string( ), m_GHost->m_DB->ThreadedGameUpdate( m_GameId, 0, "", m_GameTicks / 1000, m_GameName, m_OwnerName, m_CreatorName, "", m_Players.size( ), m_StartPlayers, GetPlayerListOfGame( ) ) ) );
+            m_GameUpdates.push_back( PairedGameUpdate( string( ), m_GHost->m_DB->ThreadedGameUpdate( m_GameId, 0, "", m_GameTicks / 1000, m_GameName, m_OwnerName, m_CreatorName, "", m_Players.size( ), m_StartPlayers, GetPlayerListOfGame( ) ) ) );
         else
-            m_GameUpdate.push_back( PairedGameUpdate( string( ), m_GHost->m_DB->ThreadedGameUpdate( m_GameId, 1, "", GetTime( ) - m_CreationTime, m_GameName, m_OwnerName, m_CreatorName, "", m_Players.size( ), ( GetSlotsOpen( ) + GetNumHumanPlayers( ) ), GetPlayerListOfGame( ) ) ) );
+            m_GameUpdates.push_back( PairedGameUpdate( string( ), m_GHost->m_DB->ThreadedGameUpdate( m_GameId, 1, "", GetTime( ) - m_CreationTime, m_GameName, m_OwnerName, m_CreatorName, "", m_Players.size( ), ( GetSlotsOpen( ) + GetNumHumanPlayers( ) ), GetPlayerListOfGame( ) ) ) );
      }
      else
-	    m_GameUpdate.push_back( PairedGameUpdate( string( ), m_GHost->m_DB->ThreadedGameUpdate( m_GameId, 0, "", 0, "", "", "", "", 0, 0, GetPlayerListOfGame( ))));
+	    m_GameUpdates.push_back( PairedGameUpdate( string( ), m_GHost->m_DB->ThreadedGameUpdate( m_GameId, 0, "", 0, "", "", "", "", 0, 0, GetPlayerListOfGame( ))));
 
     m_LastGameUpdateTime = GetTime( );
 }
@@ -4604,7 +4608,7 @@ vector<PlayerOfPlayerList> CBaseGame :: GetPlayerListOfGame( ) {
     int n = 0;
     for (unsigned char i = 0; i < m_Slots.size(); ++i)
     {
-        CGamePlayer *Player = GetPlayerFromSID2(i);
+        CGamePlayer *Player = GetPlayerFromSID(i);
 
         if (Player) {
 

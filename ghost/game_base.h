@@ -133,6 +133,7 @@ protected:
 	bool m_MatchMaking;								// if matchmaking mode is enabled
 	bool m_LocalAdminMessages;						// if local admin messages should be relayed or not
     uint32_t m_GameId;
+    uint32_t m_LastGameUpdateTime;
 
 public:
 	CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer, uint32_t nGameId );
