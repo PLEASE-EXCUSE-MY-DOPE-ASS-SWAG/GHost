@@ -488,7 +488,7 @@ CCallableGetGameId *CGHostDBMySQL :: ThreadedGetGameId( )
 	return Callable;
 }
 
-CCallableGetBotConfigs *CGHostDBMySQL :: ThreadedGetBotConfigs( )
+CCallableGetBotConfigs *CGHostDBMySQL :: ThreadedGetBotConfigs( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port )
 {
 	void *Connection = GetIdleConnection( );
 
