@@ -256,6 +256,7 @@ void CMap :: Load( map<string, string> config )
 
 	m_MapLocalPath = config["map_localpath"];
 	m_MapData.clear( );
+    m_MapData = UTIL_FileRead( m_OHBot->m_MapPath + m_MapLocalPath );
 
 	// load the map MPQ
 
