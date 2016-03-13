@@ -209,6 +209,11 @@ map<string, vector<string> > CGHostDB :: GetBotConfigTexts( )
     return {};
 }
 
+map<string, map<uint32_t, string> > CGHostDB :: GetLanguages( ) 
+{
+    return {};
+}
+
 void CGHostDB :: CreateThread( CBaseCallable *callable )
 {
 	callable->SetReady( true );
@@ -354,6 +359,11 @@ CCallableGetBotConfigTexts *CGHostDB :: ThreadedGetBotConfigTexts( )
 	return NULL;
 }
 
+CCallableGetLanguages *CGHostDB :: ThreadedGetLanguages( )
+{
+	return NULL;
+}
+
 //
 // Callables
 //
@@ -490,6 +500,11 @@ CCallableGetBotConfigs :: ~CCallableGetBotConfigs( )
 }
 
 CCallableGetBotConfigTexts :: ~CCallableGetBotConfigTexts( )
+{
+
+}
+
+CCallableGetLanguages :: ~CCallableGetLanguages( )
 {
 
 }

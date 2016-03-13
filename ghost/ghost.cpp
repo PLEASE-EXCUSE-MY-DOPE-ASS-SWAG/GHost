@@ -393,6 +393,7 @@ CGHost :: CGHost( CConfig *CFG )
     m_CallableGetGameId = NULL;
     m_CallableGetBotConfig = NULL;
     m_CallableGetBotConfigText = NULL;
+    m_CallableGetLanguages = NULL;
     m_NewGameId = 0;
     m_LastGameIdUpdate = 0;
 	CONSOLE_Print( "[GHOST] opening primary database" );
@@ -968,6 +969,14 @@ bool CGHost :: Update( long usecBlock )
         m_CallableGetBotConfigText = NULL;
     }
 
+    if( m_CallableGetLanguages && m_CallableGetLanguages->GetReady( )) {
+        m_Translations = m_CallableGetLanguages->GetResult( );
+        
+        m_DB->RecoverCallable( m_CallableGetLanguages );
+        delete m_CallableGetLanguages;
+        m_CallableGetLanguages = NULL;
+    }
+
 	return m_Exiting || AdminExit || BNETExit;
 }
 
@@ -1053,6 +1062,7 @@ void CGHost :: ReloadConfigs( )
 {
     m_CallableGetBotConfig = m_DB->ThreadedGetBotConfigs( );
     m_CallableGetBotConfigText = m_DB->ThreadedGetBotConfigTexts( );
+    m_CallableGetLanguages = m_DB->ThreadedGetLanguages( );
 }
 
 void CGHost :: ExtractScripts( )

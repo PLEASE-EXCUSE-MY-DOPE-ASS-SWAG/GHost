@@ -44,6 +44,7 @@ class CConfig;
 class CCallableGetGameId;
 class CCallableGetBotConfigs;
 class CCallableGetBotConfigTexts;
+class CCallableGetLanguages;
 
 class CGHost
 {
@@ -62,6 +63,7 @@ public:
     CCallableGetGameId *m_CallableGetGameId;
     CCallableGetBotConfigs *m_CallableGetBotConfig;
     CCallableGetBotConfigTexts *m_CallableGetBotConfigText;
+    CCallableGetLanguages *m_CallableGetLanguages;
 	vector<CBaseCallable *> m_Callables;	// vector of orphaned callables waiting to die
 	vector<BYTEARRAY> m_LocalAddresses;		// vector of local IP addresses
 	CLanguage *m_Language;					// language
@@ -134,6 +136,7 @@ public:
     vector<string> m_GameLoaded;
     vector<string> m_GameOver;
     map<int, map<string, string>> m_BNetCollection;
+    map<string, map<uint32_t, string>> m_Translations;
 
 	CGHost( CConfig *CFG );
 	~CGHost( );

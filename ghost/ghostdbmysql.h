@@ -218,6 +218,7 @@ public:
     virtual CCallableGetGameId *ThreadedGetGameId( );
     virtual CCallableGetBotConfigs *ThreadedGetBotConfigs( );
     virtual CCallableGetBotConfigTexts *ThreadedGetBotConfigTexts( );
+    virtual CCallableGetLanguages *ThreadedGetLanguages( );
     
 	virtual void *GetIdleConnection( );
 };
@@ -254,6 +255,7 @@ uint32_t MySQLCreatePlayerId( void *conn, string *error, uint32_t botid, string 
 uint32_t MySQLGetGameId( void *conn, string *error, uint32_t botid );
 map<string, string> MySQLGetBotConfigs( );
 map<string, vector<string> > MySQLGetBotConfigTexts( );
+map<string, map<integer, string> > MySQLGetLanguages( );
 
 //
 // MySQL Callables
@@ -546,6 +548,16 @@ class CMySQLCallableGetBotConfigTexts : public CCallableGetBotConfigTexts, publi
 {
 public:
 	CMySQLCallableGetBotConfigTexts( void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableGetBotConfigTexts( ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
+
+	virtual void operator( )( );
+	virtual void Init( ) { CMySQLCallable :: Init( ); }
+	virtual void Close( ) { CMySQLCallable :: Close( ); }
+};
+
+class CMySQLCallableGetLanguages : public CCallableGetLanguages, public CMySQLCallable
+{
+public:
+	CMySQLCallableGetLanguages( void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableLanguages( ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
 
 	virtual void operator( )( );
 	virtual void Init( ) { CMySQLCallable :: Init( ); }

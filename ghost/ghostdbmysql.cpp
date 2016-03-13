@@ -514,6 +514,19 @@ CCallableGetBotConfigTexts *CGHostDBMySQL :: ThreadedGetBotConfigTexts( )
 	return Callable;
 }
 
+CCallableGetLanguages *CGHostDBMySQL :: ThreadedGetLanguages( )
+{
+	void *Connection = GetIdleConnection( );
+
+	if( !Connection )
+		m_NumConnections++;
+
+	CCallableGetLanguages *Callable = new CMySQLCallableGetLanguages( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
+	CreateThread( Callable );
+	m_OutstandingCallables++;
+	return Callable;
+}
+
 void *CGHostDBMySQL :: GetIdleConnection( )
 {
 	void *Connection = NULL;
@@ -1321,6 +1334,37 @@ map<string, vector<string> > MySQLGetBotConfigTexts( void *conn, string *error, 
 	return m_ConfigTexts;
 }
 
+
+map<string, map<uint32_t, string> > MySQLGetLanguages( void *conn, string *error, uint32_t botid )
+{
+    map<string, map<uint32_t, string>> m_Languages;
+	string Query = "";
+    
+	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+		*error = mysql_error( (MYSQL *)conn );
+    else
+    {
+        MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
+
+		if( Result )
+		{
+			vector<string> Row = MySQLFetchRow( Result );
+            
+            
+			while( Row.size( ) == 2 )
+			{
+				Row = MySQLFetchRow( Result );
+			}
+
+			mysql_free_result( Result );
+		}
+		else
+			*error = mysql_error( (MYSQL *)conn );
+    }
+
+	return m_Languages;
+}
+
 //
 // MySQL Callables
 //
@@ -1618,6 +1662,16 @@ void CMySQLCallableGetBotConfigTexts :: operator( )( )
 
 	if( m_Error.empty( ) )
 		m_Result = MySQLGetBotConfigTexts( m_Connection, &m_Error, m_SQLBotID );
+
+	Close( );
+}
+
+void CMySQLCallableGetLanguages :: operator( )( )
+{
+	Init( );
+
+	if( m_Error.empty( ) )
+		m_Result = MySQLGetLanguages( m_Connection, &m_Error, m_SQLBotID );
 
 	Close( );
 }
