@@ -1453,7 +1453,7 @@ void CGHost :: ConnectToBNets( )
 	bool HoldFriends = false;
 	bool HoldClan = false;
 	bool PublicCommands = false;
-	unsigned char War3Version = 24;
+	unsigned char War3Version = 26;
 	BYTEARRAY EXEVersion = {};
 	BYTEARRAY EXEVersionHash = {};
 	string PasswordHashType = "";
@@ -1495,17 +1495,17 @@ void CGHost :: ConnectToBNets( )
                 HoldClan = UTIL_ToUInt32(j->second) == 0 ? false : true;
             } else if(key == "publiccommands") {
                 PublicCommands = UTIL_ToUInt32(j->second) == 0 ? false : true;
-            } else if(key == "custom_war3version") {
+            } else if(key == "customwar3version") {
                 War3Version = UTIL_ToUInt32(j->second);
-            } else if(key == "custom_exeversion") {
+            } else if(key == "customexeversion") {
                 EXEVersion = UTIL_ExtractNumbers(j->second, 4);
-            } else if(key == "custom_exeversionhash") {
+            } else if(key == "customexeversionhash") {
                 EXEVersionHash = UTIL_ExtractNumbers(j->second, 4);
-            } else if(key == "custom_passwordhashtype") {
+            } else if(key == "custompasswordhashtype") {
                 PasswordHashType = j->second;
-            } else if(key == "custom_pvpgnrealmname") {
+            } else if(key == "custompvpgnrealmname") {
                 PVPGNRealmName = j->second;
-            } else if(key == "custom_maxmessagelength") {
+            } else if(key == "custommaxmessagelength") {
                 MaxMessageLength = UTIL_ToUInt32(j->second);
             }
         }
