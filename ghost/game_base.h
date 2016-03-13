@@ -22,6 +22,7 @@
 #define GAME_BASE_H
 
 #include "gameslot.h"
+#include "ghostdb.h"
 
 //
 // CBaseGame
