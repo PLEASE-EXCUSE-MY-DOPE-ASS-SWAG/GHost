@@ -698,10 +698,10 @@ bool MySQLAdminRemove( void *conn, string *error, uint32_t botid, string server,
 	return Success;
 }
 
-vector<string> MySQLAdminList( void *conn, string *error, uint32_t botid, string server )
+map<string, uint32_t> MySQLAdminList( void *conn, string *error, uint32_t botid, string server )
 {
 	string EscServer = MySQLEscapeString( conn, server );
-	vector<string> AdminList;
+	map<string, uint32_t> AdminList;
 	string Query = "SELECT name FROM admins WHERE server='" + EscServer + "'";
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
@@ -716,7 +716,7 @@ vector<string> MySQLAdminList( void *conn, string *error, uint32_t botid, string
 
 			while( !Row.empty( ) )
 			{
-				AdminList.push_back( Row[0] );
+				AdminList[Row[0]] = 0;
 				Row = MySQLFetchRow( Result );
 			}
 

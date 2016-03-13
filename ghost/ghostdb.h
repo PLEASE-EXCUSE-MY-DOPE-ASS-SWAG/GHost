@@ -87,7 +87,7 @@ public:
 	virtual bool AdminCheck( string server, string user );
 	virtual bool AdminAdd( string server, string user );
 	virtual bool AdminRemove( string server, string user );
-	virtual vector<string> AdminList( string server );
+	virtual map<string, uint32_t> AdminList( string server );
 	virtual uint32_t BanCount( string server );
 	virtual CDBBan *BanCheck( string server, string user, string ip );
 	virtual bool BanAdd( string server, string user, string ip, string gamename, string admin, string reason );
@@ -270,7 +270,7 @@ class CCallableAdminList : virtual public CBaseCallable
 {
 protected:
 	string m_Server;
-	vector<string> m_Result;
+	map<string, uint32_t> m_Result;
 
 public:
 	CCallableAdminList( string nServer ) : CBaseCallable( ), m_Server( nServer ) { }

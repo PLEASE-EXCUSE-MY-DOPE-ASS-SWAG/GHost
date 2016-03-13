@@ -74,9 +74,9 @@ bool CGHostDB :: AdminRemove( string server, string user )
 	return false;
 }
 
-vector<string> CGHostDB :: AdminList( string server )
+map<string, uint32_t> CGHostDB :: AdminList( string server )
 {
-	return vector<string>( );
+	return {};
 }
 
 uint32_t CGHostDB :: BanCount( string server )

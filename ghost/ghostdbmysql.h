@@ -96,7 +96,7 @@ uint32_t MySQLAdminCount( void *conn, string *error, uint32_t botid, string serv
 bool MySQLAdminCheck( void *conn, string *error, uint32_t botid, string server, string user );
 bool MySQLAdminAdd( void *conn, string *error, uint32_t botid, string server, string user );
 bool MySQLAdminRemove( void *conn, string *error, uint32_t botid, string server, string user );
-vector<string> MySQLAdminList( void *conn, string *error, uint32_t botid, string server );
+map<string, uint32_t> MySQLAdminList( void *conn, string *error, uint32_t botid, string server );
 uint32_t MySQLBanCount( void *conn, string *error, uint32_t botid, string server );
 CDBBan *MySQLBanCheck( void *conn, string *error, uint32_t botid, string server, string user, string ip );
 bool MySQLBanAdd( void *conn, string *error, uint32_t botid, string server, string user, string ip, string gamename, string admin, string reason );
