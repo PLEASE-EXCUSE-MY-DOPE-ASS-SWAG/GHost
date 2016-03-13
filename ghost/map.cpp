@@ -800,8 +800,8 @@ void CMap :: Load( map<string, string> config )
 	m_MapMatchMakingCategory = config["map_matchmakingcategory"];
 	m_MapStatsW3MMDCategory = config["map_statsw3mmdcategory"];
 	m_MapDefaultHCL = config["map_defaulthcl"];
-	m_MapDefaultPlayerScore = UTIL_ToUInt32( config["map_defaultplayerscore", 1000 );
-	m_MapLoadInGame = UTIL_ToUInt32( config["map_loadingame", 0 ) == 0 ? false : true;
+	m_MapDefaultPlayerScore = config.find("map_defaultplayerscore" ) == config.end() ? UTIL_ToUInt32( config["map_defaultplayerscore"] ) : 1000 ;
+	m_MapLoadInGame = UTIL_ToUInt32( config["map_loadingame"] ) == 0 ? false : true;
 
 	if( MapNumPlayers == 0 )
 		MapNumPlayers = UTIL_ToUInt32( config["map_numplayers"]);
@@ -827,7 +827,7 @@ void CMap :: Load( map<string, string> config )
 	{
 		for( uint32_t Slot = 1; Slot <= 12; Slot++ )
 		{
-			string SlotString = config["map_slot" + UTIL_ToString( Slot ), string( ) );
+			string SlotString = config["map_slot"] + UTIL_ToString( Slot );
 
 			if( SlotString.empty( ) )
 				break;
@@ -843,7 +843,7 @@ void CMap :: Load( map<string, string> config )
 
 		for( uint32_t Slot = 1; Slot <= 12; Slot++ )
 		{
-			string SlotString = config["map_slot" + UTIL_ToString( Slot ), string( ) );
+			string SlotString = config["map_slot"] + UTIL_ToString( Slot );
 
 			if( SlotString.empty( ) )
 				break;
