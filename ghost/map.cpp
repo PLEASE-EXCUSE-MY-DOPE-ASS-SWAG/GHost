@@ -259,7 +259,7 @@ void CMap :: Load( map<string, string> config )
 
 	// load the map MPQ
 
-	string MapMPQFileName = m_GHost->m_MapPath + m_MapLocalPath;
+	string MapMPQFileName = m_GHost->m_MapPath + "/" + m_MapLocalPath;
 	HANDLE MapMPQ;
 	bool MapMPQReady = false;
 
