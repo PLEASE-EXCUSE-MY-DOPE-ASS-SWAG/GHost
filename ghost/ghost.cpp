@@ -1194,8 +1194,8 @@ void CGHost :: CreateGame( CMap *map, unsigned char gameState, bool saveGame, st
 			return;
 		}
 
-		string MapPath1 = m_SaveGame->GetMapPath( );
-		string MapPath2 = map->GetMapPath( );
+		string MapPath1 = m_MapPath;
+		string MapPath2 = m_MapPath;
 		transform( MapPath1.begin( ), MapPath1.end( ), MapPath1.begin( ), (int(*)(int))tolower );
 		transform( MapPath2.begin( ), MapPath2.end( ), MapPath2.begin( ), (int(*)(int))tolower );
 
