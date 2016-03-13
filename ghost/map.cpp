@@ -258,9 +258,6 @@ void CMap :: Load( map<string, string> config )
 	m_MapLocalPath = config["map_localpath"];
 	m_MapData.clear( );
 
-	if( !m_MapLocalPath.empty( ) )
-		m_MapData = UTIL_FileRead( m_GHost->m_MapPath + m_MapLocalPath );
-
 	// load the map MPQ
 
 	string MapMPQFileName = m_GHost->m_MapPath + m_MapLocalPath;
