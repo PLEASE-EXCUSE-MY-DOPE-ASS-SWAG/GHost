@@ -488,7 +488,7 @@ CCallableGetGameId *CGHostDBMySQL :: ThreadedGetGameId( )
 	return Callable;
 }
 
-CCallableGetBotConfigs *CGHostDBMySQL :: ThreadedGetBotConfigs(  )
+CCallableGetBotConfigs *CGHostDBMySQL :: ThreadedGetBotConfigs( )
 {
 	void *Connection = GetIdleConnection( );
 
@@ -1351,7 +1351,7 @@ map<string, vector<string> > MySQLGetBotConfigTexts( void *conn, string *error, 
 map<string, map<uint32_t, string> > MySQLGetLanguages( void *conn, string *error, uint32_t botid )
 {
     map<string, map<uint32_t, string>> m_Languages;
-	string Query = "";
+	string Query = "SELECT translation_id, language_code, translation FROM oh_lang_trasnlation";
     
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -1364,8 +1364,9 @@ map<string, map<uint32_t, string> > MySQLGetLanguages( void *conn, string *error
 			vector<string> Row = MySQLFetchRow( Result );
             
             
-			while( Row.size( ) == 2 )
+			while( Row.size( ) == 3 )
 			{
+                m_Languages[Row[1]][Row[0]] = Row[2];
 				Row = MySQLFetchRow( Result );
 			}
 

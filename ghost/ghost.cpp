@@ -1199,9 +1199,9 @@ void CGHost :: CreateGame( CMap *map, unsigned char gameState, bool saveGame, st
 	CONSOLE_Print( "[GHOST] creating game [" + gameName + "]" );
 
 	if( saveGame )
-		m_CurrentGame = new CGame( this, map, m_SaveGame, m_HostPort, gameState, gameName, ownerName, creatorName, creatorServer );
+		m_CurrentGame = new CGame( this, map, m_SaveGame, m_HostPort, gameState, gameName, ownerName, creatorName, creatorServer, m_NewGameId );
 	else
-		m_CurrentGame = new CGame( this, map, NULL, m_HostPort, gameState, gameName, ownerName, creatorName, creatorServer );
+		m_CurrentGame = new CGame( this, map, NULL, m_HostPort, gameState, gameName, ownerName, creatorName, creatorServer, m_NewGameId );
 
 	// todotodo: check if listening failed and report the error to the user
 
@@ -1261,6 +1261,8 @@ void CGHost :: CreateGame( CMap *map, unsigned char gameState, bool saveGame, st
 		if( (*i)->GetHoldClan( ) )
 			(*i)->HoldClan( m_CurrentGame );
 	}
+    
+    m_NewGameId = 0;
 }
 
 void CGHost :: ParseConfigValues( map<string, string> configs )

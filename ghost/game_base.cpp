@@ -43,13 +43,14 @@
 // CBaseGame
 //
 
-CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer )
+CBaseGame :: CBaseGame( CGHost *nGHost, CMap *nMap, CSaveGame *nSaveGame, uint16_t nHostPort, unsigned char nGameState, string nGameName, string nOwnerName, string nCreatorName, string nCreatorServer, uint32_t nGameId )
 {
 	m_GHost = nGHost;
 	m_Socket = new CTCPServer( );
 	m_Protocol = new CGameProtocol( m_GHost );
 	m_Map = new CMap( *nMap );
 	m_SaveGame = nSaveGame;
+    m_GameId = nGameId;
 
 	if( m_GHost->m_SaveReplays && !m_SaveGame )
 		m_Replay = new CReplay( );
