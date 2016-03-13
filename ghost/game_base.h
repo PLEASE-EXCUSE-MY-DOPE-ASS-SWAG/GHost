@@ -41,6 +41,9 @@ class CIncomingMapSize;
 class CCallableScoreCheck;
 class CCallableGetPlayerId;
 class CCallableCreatePlayerId;
+class CCallableGameUpdate;
+
+typedef pair<string,CCallableGameUpdate *> PairedGameUpdate;
 
 class CBaseGame
 {
@@ -54,6 +57,7 @@ protected:
 	vector<CPotentialPlayer *> m_Potentials;		// vector of potential players (connections that haven't sent a W3GS_REQJOIN packet yet)
 	vector<CGamePlayer *> m_Players;				// vector of players
 	vector<CCallableScoreCheck *> m_ScoreChecks;
+    vector<PairedGameUpdate> m_GameUpdates;
 	vector<CCallableGetPlayerId *> m_PairedGetPlayerIds;		// vector of paired threaded database get player ids in progress
 	vector<CCallableCreatePlayerId *> m_PairedCreatePlayerIds;		// vector of paired threaded database get player ids in progress
 	queue<CIncomingAction *> m_Actions;				// queue of actions to be sent
@@ -272,6 +276,9 @@ public:
 	virtual void DeleteVirtualHost( );
 	virtual void CreateFakePlayer( );
 	virtual void DeleteFakePlayer( );
+    
+    virtual void DoGameUpdate(bool reset);
+    virtual vector<PlayerOfPlayerList> GetPlayerListOfGame( );
 };
 
 #endif

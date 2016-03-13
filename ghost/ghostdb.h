@@ -53,11 +53,13 @@ class CCallableGetBotConfigs;
 class CCallableGetBotConfigTexts;
 class CCallableGetLanguages;
 class CCallableGetMapConfig;
+class CCallableGameUpdate;
 class CDBBan;
 class CDBGame;
 class CDBGamePlayer;
 class CDBGamePlayerSummary;
 class CDBDotAPlayerSummary;
+struct PlayerOfPlayerList;
 
 typedef pair<uint32_t,string> VarP;
 
@@ -114,6 +116,7 @@ public:
     virtual map<string, vector<string> > GetBotConfigTexts( );
     virtual map<string, map<uint32_t, string> > GetLanguages( );
     virtual map<string, string> GetMapConfig( string configname );
+    virtual string GameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist );
 
 	// threaded database functions
 
@@ -148,6 +151,7 @@ public:
     virtual CCallableGetBotConfigTexts *ThreadedGetBotConfigTexts( );
     virtual CCallableGetLanguages *ThreadedGetLanguages( );
     virtual CCallableGetMapConfig *ThreadedGetMapConfig( string configname );
+    virtual string GameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist );
 };
 
 //
@@ -673,6 +677,35 @@ public:
 	virtual void SetResult( map<string, string> nResult )	{ m_Result = nResult; }
 };
 
+class CCallableGameUpdate : virtual public CBaseCallable
+{
+protected:
+    uint32_t m_Hostcounter;
+    uint32_t m_Lobby;
+    string m_MapType;
+    uint32_t m_Duration;
+    string m_Map;
+    string m_GameName;
+    string m_OwnerName;
+    string m_CreatorName;
+    bool m_Add;
+    uint32_t m_Players;
+    uint32_t m_Total;
+    vector<PlayerOfPlayerList> m_Playerlist;
+    string m_Result;
+
+public:
+    CCallableGameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist ) : CBaseCallable( ), m_Map(map), m_GameName(gamename), m_OwnerName(ownername), m_CreatorName(creatorname), m_Playerlist(playerlist), m_Hostcounter(hostcounter), m_Lobby(lobby), m_MapType(map_type), m_Players(players), m_Total(total), m_Duration(duration) { }
+    virtual ~CCallableGameUpdate( );
+
+    virtual string GetResult( ) {
+        return m_Result;
+    }
+    virtual void SetResult( string nResult )	{
+        m_Result = nResult;
+    }
+};
+
 //
 // CDBBan
 //
@@ -951,6 +984,18 @@ public:
 	float GetAvgTowerKills( )			{ return m_TotalGames > 0 ? (float)m_TotalTowerKills / m_TotalGames : 0; }
 	float GetAvgRaxKills( )				{ return m_TotalGames > 0 ? (float)m_TotalRaxKills / m_TotalGames : 0; }
 	float GetAvgCourierKills( )			{ return m_TotalGames > 0 ? (float)m_TotalCourierKills / m_TotalGames : 0; }
+};
+
+struct PlayerOfPlayerList  {
+    string Username;
+    string Realm;
+    uint16_t Ping;
+    string IP;
+    uint8_t Color;
+    uint16_t LeftTime;
+    string LeftReason;
+    uint8_t Team;
+    uint8_t Slot;
 };
 
 #endif

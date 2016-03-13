@@ -540,6 +540,19 @@ CCallableGetMapConfig *CGHostDBMySQL :: ThreadedGetMapConfig( string m_ConfigNam
 	return Callable;
 }
 
+CCallableGameUpdate *CGHostDBMySQL :: ThreadedGameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist )
+{
+    void *Connection = GetIdleConnection( );
+
+    if( !Connection )
+        ++m_NumConnections;
+
+    CCallableGameUpdate *Callable = new CMySQLCallableGameUpdate( hostcounter, lobby, map_type, duration, gamename, ownername, creatorname, map, players, total,  playerlist, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port, "GameUpdate" );
+    CreateThread( Callable );
+    ++m_OutstandingCallables;
+    return Callable;
+}
+
 void *CGHostDBMySQL :: GetIdleConnection( )
 {
 	void *Connection = NULL;
@@ -1411,6 +1424,35 @@ map<string, string> MySQLGetMapConfig( void *conn, string *error, uint32_t botid
 	return m_Configs;
 }
 
+string MySQLGameUpdate( void *conn, string *error, uint32_t botid, uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist )
+{
+    if( !gamename.empty( ) ) {
+        string EscMapType = MySQLEscapeString( conn, map_type );
+        string EscGameName = MySQLEscapeString( conn, gamename );
+        string EscOwnerName = MySQLEscapeString( conn, ownername );
+        string EscCreatorName = MySQLEscapeString( conn, creatorname );
+        string EscMap = MySQLEscapeString( conn, map );
+        string Users ="";
+        string Splitter =",";
+        string PlayerSlpitter="#";
+        for( vector<PlayerOfPlayerList> :: iterator i = playerlist.begin( ); i != playerlist.end( ); ++i ) {
+            Users += UTIL_ToString(i->Slot)+Splitter+UTIL_ToString(i->Team)+Splitter+UTIL_ToString(i->Color)+Splitter+i->Username+Splitter+i->Realm+Splitter+UTIL_ToString(i->Ping)+Splitter+i->IP+Splitter+UTIL_ToString(i->LeftTime)+Splitter+i->LeftReason+PlayerSlpitter;
+        }
+        string EscPlayerList = MySQLEscapeString( conn, Users );
+
+        string Query = "INSERT INTO oh_gamelist (botid, gameid, lobby, map_type, gamename, ownername, creatorname, map) VALUES ('" + UTIL_ToString( botid ) + "', '" + UTIL_ToString( hostcounter ) + "', '" + UTIL_ToString( lobby ) + "', '" + EscMapType + "', '" + EscGameName + "', '" + EscOwnerName + "', '" + EscCreatorName + "', '" + EscMap + "') ON DUPLICATE KEY UPDATE lobby = '" + UTIL_ToString( lobby ) + "', duration = '" + UTIL_ToString( duration ) + "', ownername = '" + EscOwnerName + "', players = '" + UTIL_ToString( players ) + "', total = '" + UTIL_ToString( total ) + "', users = '" + EscPlayerList + "'";
+
+        if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+            *error = mysql_error( (MYSQL *)conn );
+    } else {
+        string Query = "DELETE FROM oh_gamelist WHERE botid = " + UTIL_ToString( botid ) + " AND ( gameid = " + UTIL_ToString( hostcounter ) + " OR lobby = 1 )";
+
+        if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+            *error = mysql_error( (MYSQL *)conn );
+    }
+    return "";
+}
+
 //
 // MySQL Callables
 //
@@ -1730,6 +1772,16 @@ void CMySQLCallableGetMapConfig :: operator( )( )
 		m_Result = MySQLGetMapConfig( m_Connection, &m_Error, m_SQLBotID, m_ConfigName );
 
 	Close( );
+}
+
+void CMySQLCallableGameUpdate :: operator( )( )
+{
+    Init( );
+
+    if( m_Error.empty( ) )
+        m_Result = MySQLGameUpdate( m_Connection, &m_Error, m_SQLBotID, m_Hostcounter, m_Lobby, m_MapType, m_Duration, m_GameName, m_OwnerName, m_CreatorName, m_Map, m_Players, m_Total, m_Playerlist );
+
+    Close( );
 }
 
 #endif

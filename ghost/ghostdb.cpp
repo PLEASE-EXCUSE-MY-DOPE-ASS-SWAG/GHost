@@ -224,6 +224,11 @@ map<string, string> CGHostDB :: GetMapConfig( string configname )
     return {};
 }
 
+string CGHostDB :: GameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist )
+{
+    return "";
+}
+
 CCallableAdminCount *CGHostDB :: ThreadedAdminCount( string server )
 {
 	return NULL;
@@ -374,6 +379,11 @@ CCallableGetMapConfig *CGHostDB :: ThreadedGetMapConfig( string configname )
 	return NULL;
 }
 
+CCallableGameUpdate *CGHostDB :: ThreadedGameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist )
+{
+    return NULL;
+}
+
 //
 // Callables
 //
@@ -520,6 +530,11 @@ CCallableGetLanguages :: ~CCallableGetLanguages( )
 }
 
 CCallableGetMapConfig :: ~CCallableGetMapConfig( )
+{
+
+}
+
+CCallableGameUpdate :: ~CCallableGameUpdate( )
 {
 
 }

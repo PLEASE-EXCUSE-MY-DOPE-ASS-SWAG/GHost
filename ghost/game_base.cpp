@@ -256,6 +256,9 @@ CBaseGame :: ~CBaseGame( )
 	for( vector<CCallableCreatePlayerId *> :: iterator i = m_PairedCreatePlayerIds.begin( ); i != m_PairedCreatePlayerIds.end( ); i++ )
 		m_GHost->m_Callables.push_back( *i );
 
+    for( vector<PairedGameUpdate> :: iterator i = m_GameUpdates.begin( ); i != m_GameUpdates.end( ); ++i )
+        m_GHost->m_Callables.push_back( i->second );
+        
 	while( !m_Actions.empty( ) )
 	{
 		delete m_Actions.front( );
@@ -450,6 +453,17 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 			i++;
 	}
     
+    
+    for( vector<PairedGameUpdate> :: iterator i = m_GameUpdates.begin( ); i != m_GameUpdates.end( );) {
+	    if(i->second->GetReady()) {
+            m_GHost->m_DB->RecoverCallable( i->second );
+            delete i->second;
+            i = m_GameUpdate.erase( i );
+        }
+        else
+            ++i;
+    }
+    
 	// update players
 
 	for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); )
@@ -551,6 +565,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 	if( m_RefreshError && !m_CountDownStarted && m_GameState == GAME_PUBLIC && !m_GHost->m_AutoHostGameName.empty( ) && m_GHost->m_AutoHostMaximumGames != 0 && m_GHost->m_AutoHostAutoStartPlayers != 0 && m_AutoStartPlayers != 0 )
 	{
+		DoGameUpdate(true);
 		// there's a slim chance that this isn't actually an autohosted game since there is no explicit autohost flag
 		// however, if autohosting is enabled and this game is public and this game is set to autostart, it's probably autohosted
 		// so rehost it using the current autohost game name
@@ -572,6 +587,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 		m_CreationTime = GetTime( );
 		m_LastRefreshTime = GetTime( );
+		DoGameUpdate(false);
 	}
 
 	// refresh every 3 seconds
@@ -725,6 +741,8 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 
 	if( !m_GameLoading && !m_GameLoaded && m_AutoStartPlayers == 0 && m_GHost->m_LobbyTimeLimit > 0 )
 	{
+        DoGameUpdate(true);
+        
 		// check if there's a player with reserved status in the game
 
 		for( vector<CGamePlayer *> :: iterator i = m_Players.begin( ); i != m_Players.end( ); i++ )
@@ -740,6 +758,7 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 			CONSOLE_Print( "[GAME: " + m_GameName + "] is over (lobby time limit hit)" );
 			return true;
 		}
+        DoGameUpdate(false);
 	}
 
 	// check if the game is loaded
@@ -1035,6 +1054,13 @@ bool CBaseGame :: Update( void *fd, void *send_fd )
 	{
 		CONSOLE_Print( "[GAME: " + m_GameName + "] gameover timer started (one player left)" );
 		m_GameOverTime = GetTime( );
+	}
+    
+    // game update if needed based on interval
+
+	if (GetTime() - m_LastGameUpdateTime > 3)
+	{
+		DoGameUpdate(false);
 	}
 
 	// finish the gameover timer
@@ -4555,4 +4581,47 @@ void CBaseGame :: DeleteFakePlayer( )
 	SendAll( m_Protocol->SEND_W3GS_PLAYERLEAVE_OTHERS( m_FakePlayerPID, PLAYERLEAVE_LOBBY ) );
 	SendAllSlotInfo( );
 	m_FakePlayerPID = 255;
+}
+
+
+
+void CBaseGame :: DoGameUpdate(bool reset) {
+    if( !reset ) {
+        if( m_GameLoading || m_GameLoaded )
+	    
+            m_GameUpdate.push_back( PairedGameUpdate( string( ), m_GHost->m_DB->ThreadedGameUpdate( m_GameId, 0, "", m_GameTicks / 1000, m_GameName, m_OwnerName, m_CreatorName, "", m_Players.size( ), m_StartPlayers, GetPlayerListOfGame( ) ) ) );
+        else
+            m_GameUpdate.push_back( PairedGameUpdate( string( ), m_GHost->m_DB->ThreadedGameUpdate( m_GameId, 1, "", GetTime( ) - m_CreationTime, m_GameName, m_OwnerName, m_CreatorName, "", m_Players.size( ), ( GetSlotsOpen( ) + GetNumHumanPlayers( ) ), GetPlayerListOfGame( ) ) ) );
+     }
+     else
+	    m_GameUpdate.push_back( PairedGameUpdate( string( ), m_GHost->m_DB->ThreadedGameUpdate( m_GameId, 0, "", 0, "", "", "", "", 0, 0, GetPlayerListOfGame( ))));
+
+    m_LastGameUpdateTime = GetTime( );
+}
+
+vector<PlayerOfPlayerList> CBaseGame :: GetPlayerListOfGame( ) {
+    vector<PlayerOfPlayerList> m_Players;
+    int n = 0;
+    for (unsigned char i = 0; i < m_Slots.size(); ++i)
+    {
+        CGamePlayer *Player = GetPlayerFromSID2(i);
+
+        if (Player) {
+
+            PlayerOfPlayerList newPlayer;
+            newPlayer.Username = Player->GetName();
+            newPlayer.Realm = Player->GetSpoofedRealm();
+            newPlayer.Ping = Player->GetPing(m_GHost->m_LCPings);
+            newPlayer.IP = Player->GetExternalIPString();
+            newPlayer.LeftTime = Player->GetLeftTime();
+            newPlayer.LeftReason = Player->GetLeftReason();
+            newPlayer.Color = m_Slots[i].GetColour();
+            newPlayer.Team = m_Slots[i].GetTeam();
+            newPlayer.Slot = i;
+
+            m_Players.push_back(newPlayer);
+        }
+        n++;
+    }
+    return m_Players;
 }
