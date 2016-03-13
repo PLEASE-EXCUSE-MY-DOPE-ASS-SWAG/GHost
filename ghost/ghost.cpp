@@ -1538,15 +1538,6 @@ void CGHost :: ConnectToBNets( )
 
         CONSOLE_Print( "[GHOST] found battle.net connection #" + UTIL_ToString( counter ) + " for server [" + Server + "]" );
 
-        if( Locale == "system" )
-        {
-#ifdef WIN32
-            CONSOLE_Print( "[GHOST] using system locale of " + UTIL_ToString( LocaleID ) );
-#else
-            CONSOLE_Print( "[GHOST] unable to get system locale, using default locale of 1033" );
-#endif
-        }
-
         m_BNETs.push_back( new CBNET( this, Server, ServerAlias, "", 0, 0, CDKeyROC, CDKeyTFT, CountryAbbrev, Country, LocaleID, UserName, UserPassword, FirstChannel, RootAdmin, BNETCommandTrigger[0], HoldFriends, HoldClan, PublicCommands, War3Version, EXEVersion, EXEVersionHash, PasswordHashType, PVPGNRealmName, MaxMessageLength, counter) );
         counter++;
     }
