@@ -54,6 +54,7 @@ class CCallableGetBotConfigTexts;
 class CCallableGetLanguages;
 class CCallableGetMapConfig;
 class CCallableGameUpdate;
+class CCallableGetAliases;
 class CDBBan;
 class CDBGame;
 class CDBGamePlayer;
@@ -117,7 +118,8 @@ public:
     virtual map<string, map<uint32_t, string> > GetLanguages( );
     virtual map<string, string> GetMapConfig( string configname );
     virtual string GameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist );
-
+    virtual map<uint32_t, string> GetAliases( );
+    
 	// threaded database functions
 
 	virtual void CreateThread( CBaseCallable *callable );
@@ -152,6 +154,7 @@ public:
     virtual CCallableGetLanguages *ThreadedGetLanguages( );
     virtual CCallableGetMapConfig *ThreadedGetMapConfig( string configname );
     virtual CCallableGameUpdate *ThreadedGameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist );
+    virtual CCallableGetAliases *ThreadedGetAliases( );
 };
 
 //
@@ -704,6 +707,19 @@ public:
     virtual void SetResult( string nResult )	{
         m_Result = nResult;
     }
+};
+
+class CCallableGetAliases : virtual public CBaseCallable
+{
+protected:
+	map<uint32_t, string> m_Result;
+
+public:
+	CCallableGetAliases( ) : CBaseCallable( ), m_Result( {} ) { }
+	virtual ~CCallableGetAliases( );
+
+	virtual map<uint32_t, string> GetResult( )				{ return m_Result; }
+	virtual void SetResult( map<uint32_t, string> nResult )	{ m_Result = nResult; }
 };
 
 //

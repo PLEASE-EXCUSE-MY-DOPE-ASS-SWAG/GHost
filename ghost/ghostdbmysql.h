@@ -84,7 +84,8 @@ public:
     virtual CCallableGetLanguages *ThreadedGetLanguages( );
     virtual CCallableGetMapConfig *ThreadedGetMapConfig( string configname );
     virtual CCallableGameUpdate *ThreadedGameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist );
-    
+    virtual CCallableGetAliases *ThreadedGetAliases( );
+   
 	virtual void *GetIdleConnection( );
 };
 
@@ -123,6 +124,7 @@ map<string, vector<string> > MySQLGetBotConfigTexts( void *conn, string *error, 
 map<string, map<uint32_t, string> > MySQLGetLanguages( void *conn, string *error, uint32_t botid );
 map<string, string> MySQLGetMapConfig( void *conn, string *error, uint32_t botid, string configname);
 string MySQLGameUpdate( void *conn, string *error, uint32_t botid, uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist );
+map<uint32_t, string> MySQLGetAliases( void *conn, string *error, uint32_t botid );
 
 //
 // MySQL Callables
@@ -454,6 +456,16 @@ public:
     virtual void Close( ) {
         CMySQLCallable :: Close( );
     }
+};
+
+class CMySQLCallableGetAliases : public CCallableGetAliases, public CMySQLCallable
+{
+public:
+	CMySQLCallableGetAliases( void *nConnection, uint32_t nSQLBotID, string nSQLServer, string nSQLDatabase, string nSQLUser, string nSQLPassword, uint16_t nSQLPort ) : CBaseCallable( ), CCallableGetAliases( ), CMySQLCallable( nConnection, nSQLBotID, nSQLServer, nSQLDatabase, nSQLUser, nSQLPassword, nSQLPort ) { }
+
+	virtual void operator( )( );
+	virtual void Init( ) { CMySQLCallable :: Init( ); }
+	virtual void Close( ) { CMySQLCallable :: Close( ); }
 };
 
 #endif

@@ -371,6 +371,7 @@ CGHost :: CGHost( CConfig *CFG )
     m_CallableGetBotConfig = m_DB->ThreadedGetBotConfigs( );
     m_CallableGetBotConfigText = m_DB->ThreadedGetBotConfigTexts( );
     m_CallableAdminLists = m_DB->ThreadedGetAdminList( );
+    m_Aliases = m_DB->ThreadedGetAliases( );
 
 	// get a list of local IP addresses
 	// this list is used elsewhere to determine if a player connecting to the bot is local or not

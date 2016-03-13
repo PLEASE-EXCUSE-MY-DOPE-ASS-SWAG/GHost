@@ -553,6 +553,19 @@ CCallableGameUpdate *CGHostDBMySQL :: ThreadedGameUpdate( uint32_t hostcounter, 
     return Callable;
 }
 
+CCallableGetAliases *CGHostDBMySQL :: ThreadedGetAliases( )
+{
+	void *Connection = GetIdleConnection( );
+
+	if( !Connection )
+		m_NumConnections++;
+
+	CCallableGetAliases *Callable = new CMySQLCallableGetAliases( Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
+	CreateThread( Callable );
+	m_OutstandingCallables++;
+	return Callable;
+}
+
 void *CGHostDBMySQL :: GetIdleConnection( )
 {
 	void *Connection = NULL;
@@ -1362,7 +1375,6 @@ map<string, vector<string> > MySQLGetBotConfigTexts( void *conn, string *error, 
 	return m_ConfigTexts;
 }
 
-
 map<string, map<uint32_t, string> > MySQLGetLanguages( void *conn, string *error, uint32_t botid )
 {
     map<string, map<uint32_t, string>> m_Languages;
@@ -1453,6 +1465,36 @@ string MySQLGameUpdate( void *conn, string *error, uint32_t botid, uint32_t host
             *error = mysql_error( (MYSQL *)conn );
     }
     return "";
+}
+
+map<uint32_t, string> MySQLGetAliases( void *conn, string *error, uint32_t botid )
+{
+    map<uint32_t, string> m_Aliases;
+	string Query = "SELECT alias_id, alias_name FROM oh_aliases;";
+    
+	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
+		*error = mysql_error( (MYSQL *)conn );
+    else
+    {
+        MYSQL_RES *Result = mysql_store_result( (MYSQL *)conn );
+
+		if( Result )
+		{
+			vector<string> Row = MySQLFetchRow( Result );
+            
+			while( Row.size( ) == 2 )
+			{
+                m_Aliases[UTIL_ToUInt32(Row[0])] = Row[1];
+				Row = MySQLFetchRow( Result );
+			}
+
+			mysql_free_result( Result );
+		}
+		else
+			*error = mysql_error( (MYSQL *)conn );
+    }
+
+	return m_Aliases;
 }
 
 //
@@ -1784,6 +1826,16 @@ void CMySQLCallableGameUpdate :: operator( )( )
         m_Result = MySQLGameUpdate( m_Connection, &m_Error, m_SQLBotID, m_Hostcounter, m_Lobby, m_MapType, m_Duration, m_GameName, m_OwnerName, m_CreatorName, m_Map, m_Players, m_Total, m_Playerlist );
 
     Close( );
+}
+
+void CMySQLCallableGetAliases :: operator( )( )
+{
+	Init( );
+
+	if( m_Error.empty( ) )
+		m_Result = MySQLGetAliases( m_Connection, &m_Error, m_SQLBotID );
+
+	Close( );
 }
 
 #endif

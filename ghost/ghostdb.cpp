@@ -214,6 +214,11 @@ map<string, map<uint32_t, string> > CGHostDB :: GetLanguages( )
     return {};
 }
 
+map<uint32_t, string> CGHostDB :: GetAliases( ) 
+{
+    return {};
+}
+
 void CGHostDB :: CreateThread( CBaseCallable *callable )
 {
 	callable->SetReady( true );
@@ -384,6 +389,11 @@ CCallableGameUpdate *CGHostDB :: ThreadedGameUpdate( uint32_t hostcounter, uint3
     return NULL;
 }
 
+CCallableGetAliases *CGHostDB :: ThreadedGetAliases( )
+{
+	return NULL;
+}
+
 //
 // Callables
 //
@@ -535,6 +545,11 @@ CCallableGetMapConfig :: ~CCallableGetMapConfig( )
 }
 
 CCallableGameUpdate :: ~CCallableGameUpdate( )
+{
+
+}
+
+CCallableGetAliases :: ~CCallableGetAliases( )
 {
 
 }
