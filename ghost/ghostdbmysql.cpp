@@ -527,7 +527,7 @@ CCallableGetLanguages *CGHostDBMySQL :: ThreadedGetLanguages( )
 	return Callable;
 }
 
-CCallableGetMapConfig *CGHostDBMySQL :: ThreadedGetMapConfig( m_ConfigName )
+CCallableGetMapConfig *CGHostDBMySQL :: ThreadedGetMapConfig( string m_ConfigName )
 {
 	void *Connection = GetIdleConnection( );
 
