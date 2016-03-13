@@ -714,7 +714,7 @@ void CMap :: Load( map<string, string> config )
 
 	if( MapSize.empty( ) )
 		MapSize = UTIL_ExtractNumbers( config["map_size"], 4 );
-	else if( config.find("map_size" ) == config.end() )
+	else if( config.find("map_size" ) != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding calculated map_size with config value map_size = " + config["map_size"] );
 		MapSize = UTIL_ExtractNumbers( config["map_size"], 4 );
@@ -724,7 +724,7 @@ void CMap :: Load( map<string, string> config )
 
 	if( MapInfo.empty( ) )
 		MapInfo = UTIL_ExtractNumbers( config["map_info"], 4 );
-	else if( config.find("map_info" ) == config.end() )
+	else if( config.find("map_info" ) != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding calculated map_info with config value map_info = " + config["map_info"] );
 		MapInfo = UTIL_ExtractNumbers( config["map_info"], 4 );
@@ -734,7 +734,7 @@ void CMap :: Load( map<string, string> config )
 
 	if( MapCRC.empty( ) )
 		MapCRC = UTIL_ExtractNumbers( config["map_crc"], 4 );
-	else if( config.find("map_crc" ) == config.end() )
+	else if( config.find("map_crc" ) != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding calculated map_crc with config value map_crc = " + config["map_crc"] );
 		MapCRC = UTIL_ExtractNumbers( config["map_crc"], 4 );
@@ -744,27 +744,27 @@ void CMap :: Load( map<string, string> config )
 
 	if( MapSHA1.empty( ) )
 		MapSHA1 = UTIL_ExtractNumbers( config["map_sha1"], 20 );
-	else if( config.find("map_sha1" ) == config.end() )
+	else if( config.find("map_sha1" ) != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding calculated map_sha1 with config value map_sha1 = " + config["map_sha1"] );
 		MapSHA1 = UTIL_ExtractNumbers( config["map_sha1"], 20 );
 	}
 
 	m_MapSHA1 = MapSHA1;
-	m_MapSpeed = config.find("map_speed" ) == config.end() ? UTIL_ToUInt32( config["map_speed"] ) : MAPSPEED_FAST ;
-	m_MapVisibility = config.find("map_visibility" ) == config.end() ? UTIL_ToUInt32( config["map_visibility"] ) : MAPVIS_DEFAULT;
-	m_MapObservers = config.find("map_observers" ) == config.end() ? UTIL_ToUInt32( config["map_observers"] ) : MAPOBS_NONE;
-	m_MapFlags = config.find("map_flags" ) == config.end() ? UTIL_ToUInt32( config["map_flags"] ) : MAPFLAG_TEAMSTOGETHER | MAPFLAG_FIXEDTEAMS;
-	m_MapFilterMaker = config.find("map_filter_maker" ) == config.end() ? UTIL_ToUInt32( config["map_filter_maker"] ) : MAPFILTER_MAKER_USER;
-	m_MapFilterType = config.find("map_filter_type" ) == config.end() ? UTIL_ToUInt32( config["map_filter_type"]) : 0;
-	m_MapFilterSize = config.find("map_filter_size" ) == config.end() ? UTIL_ToUInt32( config["map_filter_size"] ) : MAPFILTER_SIZE_LARGE;
-	m_MapFilterObs = config.find("map_filter_obs" ) == config.end() ? UTIL_ToUInt32( config["map_filter_obs"] ) : MAPFILTER_OBS_NONE;
+	m_MapSpeed = config.find("map_speed" ) != config.end() ? UTIL_ToUInt32( config["map_speed"] ) : MAPSPEED_FAST ;
+	m_MapVisibility = config.find("map_visibility" ) != config.end() ? UTIL_ToUInt32( config["map_visibility"] ) : MAPVIS_DEFAULT;
+	m_MapObservers = config.find("map_observers" ) != config.end() ? UTIL_ToUInt32( config["map_observers"] ) : MAPOBS_NONE;
+	m_MapFlags = config.find("map_flags" ) != config.end() ? UTIL_ToUInt32( config["map_flags"] ) : MAPFLAG_TEAMSTOGETHER | MAPFLAG_FIXEDTEAMS;
+	m_MapFilterMaker = config.find("map_filter_maker" ) != config.end() ? UTIL_ToUInt32( config["map_filter_maker"] ) : MAPFILTER_MAKER_USER;
+	m_MapFilterType = config.find("map_filter_type" ) != config.end() ? UTIL_ToUInt32( config["map_filter_type"]) : 0;
+	m_MapFilterSize = config.find("map_filter_size" ) != config.end() ? UTIL_ToUInt32( config["map_filter_size"] ) : MAPFILTER_SIZE_LARGE;
+	m_MapFilterObs = config.find("map_filter_obs" ) != config.end() ? UTIL_ToUInt32( config["map_filter_obs"] ) : MAPFILTER_OBS_NONE;
 
 	// todotodo: it might be possible for MapOptions to legitimately be zero so this is not a valid way of checking if it wasn't parsed out earlier
 
 	if( MapOptions == 0 )
 		MapOptions = UTIL_ToUInt32( config["map_options"]);
-	else if( config.find("map_options" ) == config.end() )
+	else if( config.find("map_options" ) != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding calculated map_options with config value map_options = " + config["map_options"] );
 		MapOptions = UTIL_ToUInt32( config["map_options"]);
@@ -774,7 +774,7 @@ void CMap :: Load( map<string, string> config )
 
 	if( MapWidth.empty( ) )
 		MapWidth = UTIL_ExtractNumbers( config["map_width"], 2 );
-	else if( config.find("map_width" ) == config.end() )
+	else if( config.find("map_width" ) != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding calculated map_width with config value map_width = " + config["map_width"] );
 		MapWidth = UTIL_ExtractNumbers( config["map_width"], 2 );
@@ -784,7 +784,7 @@ void CMap :: Load( map<string, string> config )
 
 	if( MapHeight.empty( ) )
 		MapHeight = UTIL_ExtractNumbers( config["map_height"], 2 );
-	else if( config.find("map_height") == config.end() )
+	else if( config.find("map_height") != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding calculated map_height with config value map_height = " + config["map_height"] );
 		MapHeight = UTIL_ExtractNumbers( config["map_height"], 2 );
@@ -795,12 +795,12 @@ void CMap :: Load( map<string, string> config )
 	m_MapMatchMakingCategory = config["map_matchmakingcategory"];
 	m_MapStatsW3MMDCategory = config["map_statsw3mmdcategory"];
 	m_MapDefaultHCL = config["map_defaulthcl"];
-	m_MapDefaultPlayerScore = config.find("map_defaultplayerscore" ) == config.end() ? UTIL_ToUInt32( config["map_defaultplayerscore"] ) : 1000 ;
+	m_MapDefaultPlayerScore = config.find("map_defaultplayerscore" ) != config.end() ? UTIL_ToUInt32( config["map_defaultplayerscore"] ) : 1000 ;
 	m_MapLoadInGame = UTIL_ToUInt32( config["map_loadingame"] ) == 0 ? false : true;
 
 	if( MapNumPlayers == 0 )
 		MapNumPlayers = UTIL_ToUInt32( config["map_numplayers"]);
-	else if( config.find("map_numplayers" ) == config.end() )
+	else if( config.find("map_numplayers" ) != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding calculated map_numplayers with config value map_numplayers = " + config["map_numplayers"] );
 		MapNumPlayers = UTIL_ToUInt32( config["map_numplayers"]);
@@ -810,7 +810,7 @@ void CMap :: Load( map<string, string> config )
 
 	if( MapNumTeams == 0 )
 		MapNumTeams = UTIL_ToUInt32( config["map_numteams"]);
-	else if( config.find("map_numteams" ) == config.end() )
+	else if( config.find("map_numteams" ) != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding calculated map_numteams with config value map_numteams = " + config["map_numteams"] );
 		MapNumTeams = UTIL_ToUInt32( config["map_numteams"]);
@@ -831,7 +831,7 @@ void CMap :: Load( map<string, string> config )
 			Slots.push_back( CGameSlot( SlotData ) );
 		}
 	}
-	else if( config.find("map_slot1" ) == config.end() )
+	else if( config.find("map_slot1" ) != config.end() )
 	{
 		CONSOLE_Print( "[MAP] overriding slots" );
 		Slots.clear( );
