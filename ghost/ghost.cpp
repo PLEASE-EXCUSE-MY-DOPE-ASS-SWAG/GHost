@@ -1465,47 +1465,47 @@ void CGHost :: ConnectToBNets( )
             size_t pos = j->first.find_first_of("_") != string::npos;
             string key = j->first.substr(pos + 1);
             if(key == "server" ) {
-                Server = i->second;
+                Server = j->second;
             } else if(key == "serveralias") {
-                ServerAlias = i->second;
+                ServerAlias = j->second;
             } else if(key == "cdkeyroc") {
-                CDKeyROC = i->second;
+                CDKeyROC = j->second;
             } else if(key == "cdkeytft") {
-                CDKeyTFT = i->second;
+                CDKeyTFT = j->second;
             } else if(key == "countryabbrev") {
-                CountryAbbrev = i->second;
+                CountryAbbrev = j->second;
             } else if(key == "country") {
-                Country = i->second;
+                Country = j->second;
             } else if(key == "locale") {
-                Locale = i->second;
+                Locale = j->second;
             } else if(key == "username") {
-                UserName = i->second;
+                UserName = j->second;
             } else if(key == "password") {
-                UserPassword = i->second;
+                UserPassword = j->second;
             } else if(key == "firstchannel") {
-                FirstChannel = i->second;
+                FirstChannel = j->second;
             } else if(key == "rootadmin") {
-                RootAdmin = i->second;
+                RootAdmin = j->second;
             } else if(key == "commandtrigger") {
-                BNETCommandTrigger = i->second[0];
+                BNETCommandTrigger = j->second[0];
             } else if(key == "holdfriends") {
-                HoldFriends = UTIL_ToUInt32(i->second) == 0 ? false : true;
+                HoldFriends = UTIL_ToUInt32(j->second) == 0 ? false : true;
             } else if(key == "holdclan") {
-                HoldClan = UTIL_ToUInt32(i->second) == 0 ? false : true;
+                HoldClan = UTIL_ToUInt32(j->second) == 0 ? false : true;
             } else if(key == "publiccommands") {
-                PublicCommands = UTIL_ToUInt32(i->second) == 0 ? false : true;
+                PublicCommands = UTIL_ToUInt32(j->second) == 0 ? false : true;
             } else if(key == "custom_war3version") {
-                War3Version = UTIL_ToUInt32(i->second);
+                War3Version = UTIL_ToUInt32(j->second);
             } else if(key == "custom_exeversion") {
-                EXEVersion = UTIL_ExtractNumbers(i->second, 4);
+                EXEVersion = UTIL_ExtractNumbers(j->second, 4);
             } else if(key == "custom_exeversionhash") {
-                EXEVersionHash = UTIL_ExtractNumbers(i->second, 4);
+                EXEVersionHash = UTIL_ExtractNumbers(j->second, 4);
             } else if(key == "custom_passwordhashtype") {
-                PasswordHashType = i->second;
+                PasswordHashType = j->second;
             } else if(key == "custom_pvpgnrealmname") {
-                PVPGNRealmName = i->second;
+                PVPGNRealmName = j->second;
             } else if(key == "custom_maxmessagelength") {
-                MaxMessageLength = UTIL_ToUInt32(i->second);
+                MaxMessageLength = UTIL_ToUInt32(j->second);
             }
         }
         
