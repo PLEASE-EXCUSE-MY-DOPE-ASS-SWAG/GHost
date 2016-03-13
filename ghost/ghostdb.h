@@ -151,7 +151,7 @@ public:
     virtual CCallableGetBotConfigTexts *ThreadedGetBotConfigTexts( );
     virtual CCallableGetLanguages *ThreadedGetLanguages( );
     virtual CCallableGetMapConfig *ThreadedGetMapConfig( string configname );
-    virtual string GameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist );
+    virtual CCallableGameUpdate *ThreadedGameUpdate( uint32_t hostcounter, uint32_t lobby, string map_type, uint32_t duration, string gamename, string ownername, string creatorname, string map, uint32_t players, uint32_t total, vector<PlayerOfPlayerList> playerlist );
 };
 
 //
