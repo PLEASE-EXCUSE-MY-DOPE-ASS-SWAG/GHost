@@ -370,7 +370,7 @@ CGHost :: CGHost( CConfig *CFG )
     /* load configs */
     m_CallableGetBotConfig = m_DB->ThreadedGetBotConfigs( );
     m_CallableGetBotConfigText = m_DB->ThreadedGetBotConfigTexts( );
-    m_CallableAdminLists = m_DB->ThreadedAdminList( );
+    m_CallableAdminLists = m_DB->ThreadedAdminList( "" );
     m_CallableGetAliases = m_DB->ThreadedGetAliases( );
 
 	// get a list of local IP addresses
