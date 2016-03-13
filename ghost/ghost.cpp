@@ -1463,7 +1463,7 @@ void CGHost :: ConnectToBNets( )
         for(options_iterator j = i->second.begin(); j != i->second.end(); j++)
         {
             size_t pos = j->first.find_first_of("_") != string::npos;
-            string key = j->first.substr(pos + 1)
+            string key = j->first.substr(pos + 1);
             if(key == "server" ) {
                 Server = i->second;
             } else if(key == "serveralias") {
