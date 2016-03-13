@@ -702,7 +702,7 @@ map<string, uint32_t> MySQLAdminList( void *conn, string *error, uint32_t botid,
 {
 	string EscServer = MySQLEscapeString( conn, server );
 	map<string, uint32_t> AdminList;
-	string Query = "SELECT name FROM admins WHERE server='" + EscServer + "'";
+	string Query = "SELECT bnet_username, user_level FROM oh_users WHERE user_bnet = 2 AND user_level != 0 ";
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
@@ -716,7 +716,9 @@ map<string, uint32_t> MySQLAdminList( void *conn, string *error, uint32_t botid,
 
 			while( !Row.empty( ) )
 			{
-				AdminList[Row[0]] = 0;
+                string username = Row[0];
+                transform( username.begin( ), username.end( ), username.begin( ), (int(*)(int))tolower );
+				AdminList[username] = UTIL_ToUInt32(Row[1]);
 				Row = MySQLFetchRow( Result );
 			}
 

@@ -370,6 +370,7 @@ CGHost :: CGHost( CConfig *CFG )
     /* load configs */
     m_CallableGetBotConfig = m_DB->ThreadedGetBotConfigs( );
     m_CallableGetBotConfigText = m_DB->ThreadedGetBotConfigTexts( );
+    m_CallableAdminLists = m_DB->ThreadedGetAdminList( );
 
 	// get a list of local IP addresses
 	// this list is used elsewhere to determine if a player connecting to the bot is local or not
@@ -954,6 +955,14 @@ bool CGHost :: Update( long usecBlock )
         m_DB->RecoverCallable( m_CallableGetMapConfig );
         delete m_CallableGetMapConfig;
         m_CallableGetMapConfig = NULL;
+    }
+    
+    if( m_CallableAdminLists && m_CallableAdminLists->GetReady( )) {
+        m_AdminList = m_CallableAdminLists->GetResult( );
+        
+        m_DB->RecoverCallable( m_CallableAdminLists );
+        delete m_CallableAdminLists;
+        m_CallableAdminLists = NULL;
     }
     
 	return m_Exiting || AdminExit || BNETExit;

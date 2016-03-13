@@ -65,6 +65,10 @@ public:
 	virtual void EventGameStarted( );
 	virtual bool IsGameDataSaved( );
 	virtual void SaveGameData( );
+    
+    virtual bool IsRootAdmin( string username );
+    virtual bool IsAdmin( string username );
+    virtual bool IsPremium( string username );
 };
 
 #endif
