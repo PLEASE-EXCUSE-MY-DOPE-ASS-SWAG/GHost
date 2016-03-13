@@ -1514,29 +1514,29 @@ void CGHost :: ConnectToBNets( )
 
         if( CDKeyROC.empty( ) )
         {
-            CONSOLE_Print( "[GHOST] missing " + Prefix + "cdkeyroc, skipping this battle.net connection" );
+            CONSOLE_Print( "[GHOST] missing cdkeyroc, skipping this battle.net connection" );
             continue;
         }
 
         if( m_TFT && CDKeyTFT.empty( ) )
         {
-            CONSOLE_Print( "[GHOST] missing " + Prefix + "cdkeytft, skipping this battle.net connection" );
+            CONSOLE_Print( "[GHOST] missing cdkeytft, skipping this battle.net connection" );
             continue;
         }
 
         if( UserName.empty( ) )
         {
-            CONSOLE_Print( "[GHOST] missing " + Prefix + "username, skipping this battle.net connection" );
+            CONSOLE_Print( "[GHOST] missing username, skipping this battle.net connection" );
             continue;
         }
 
         if( UserPassword.empty( ) )
         {
-            CONSOLE_Print( "[GHOST] missing " + Prefix + "password, skipping this battle.net connection" );
+            CONSOLE_Print( "[GHOST] missing password, skipping this battle.net connection" );
             continue;
         }
 
-        CONSOLE_Print( "[GHOST] found battle.net connection #" + UTIL_ToString( i ) + " for server [" + Server + "]" );
+        CONSOLE_Print( "[GHOST] found battle.net connection #" + UTIL_ToString( counter ) + " for server [" + Server + "]" );
 
         if( Locale == "system" )
         {
