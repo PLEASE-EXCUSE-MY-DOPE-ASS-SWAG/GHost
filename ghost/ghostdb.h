@@ -791,6 +791,7 @@ class CDBGamePlayer
 {
 private:
 	uint32_t m_ID;
+    uint32_t m_PlayerId;
 	uint32_t m_GameID;
 	string m_Name;
 	string m_IP;
@@ -804,9 +805,10 @@ private:
 	uint32_t m_Colour;
 
 public:
-	CDBGamePlayer( uint32_t nID, uint32_t nGameID, string nName, string nIP, uint32_t nSpoofed, string nSpoofedRealm, uint32_t nReserved, uint32_t nLoadingTime, uint32_t nLeft, string nLeftReason, uint32_t nTeam, uint32_t nColour );
+	CDBGamePlayer( uint32_t nID, uint32_t nPlayerId, uint32_t nGameID, string nName, string nIP, uint32_t nSpoofed, string nSpoofedRealm, uint32_t nReserved, uint32_t nLoadingTime, uint32_t nLeft, string nLeftReason, uint32_t nTeam, uint32_t nColour );
 	~CDBGamePlayer( );
 
+    uint32_t GetPlayerId( )     { return m_PlayerId; }
 	uint32_t GetID( )			{ return m_ID; }
 	uint32_t GetGameID( )		{ return m_GameID; }
 	string GetName( )			{ return m_Name; }
