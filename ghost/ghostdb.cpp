@@ -624,9 +624,8 @@ CDBGamePlayer :: ~CDBGamePlayer( )
 // CDBGamePlayerSummary
 //
 
-CDBGamePlayerSummary :: CDBGamePlayerSummary( uint32_t nPlayerId, string nServer, string nName, string nFirstGameDateTime, string nLastGameDateTime, uint32_t nTotalGames, uint32_t nMinLoadingTime, uint32_t nAvgLoadingTime, uint32_t nMaxLoadingTime, uint32_t nMinLeftPercent, uint32_t nAvgLeftPercent, uint32_t nMaxLeftPercent, uint32_t nMinDuration, uint32_t nAvgDuration, uint32_t nMaxDuration )
+CDBGamePlayerSummary :: CDBGamePlayerSummary( string nServer, string nName, string nFirstGameDateTime, string nLastGameDateTime, uint32_t nTotalGames, uint32_t nMinLoadingTime, uint32_t nAvgLoadingTime, uint32_t nMaxLoadingTime, uint32_t nMinLeftPercent, uint32_t nAvgLeftPercent, uint32_t nMaxLeftPercent, uint32_t nMinDuration, uint32_t nAvgDuration, uint32_t nMaxDuration )
 {
-    m_PlayerId = nPlayerId;
 	m_Server = nServer;
 	m_Name = nName;
 	m_FirstGameDateTime = nFirstGameDateTime;
