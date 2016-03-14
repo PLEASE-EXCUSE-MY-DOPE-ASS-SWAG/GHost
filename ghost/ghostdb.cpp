@@ -598,9 +598,10 @@ CDBGame :: ~CDBGame( )
 // CDBGamePlayer
 //
 
-CDBGamePlayer :: CDBGamePlayer( uint32_t nID, uint32_t nGameID, string nName, string nIP, uint32_t nSpoofed, string nSpoofedRealm, uint32_t nReserved, uint32_t nLoadingTime, uint32_t nLeft, string nLeftReason, uint32_t nTeam, uint32_t nColour )
+CDBGamePlayer :: CDBGamePlayer( uint32_t nID, uint32_t nPlayerId, uint32_t nGameID, string nName, string nIP, uint32_t nSpoofed, string nSpoofedRealm, uint32_t nReserved, uint32_t nLoadingTime, uint32_t nLeft, string nLeftReason, uint32_t nTeam, uint32_t nColour )
 {
 	m_ID = nID;
+    m_PlayerId = nPlayerId;
 	m_GameID = nGameID;
 	m_Name = nName;
 	m_IP = nIP;
