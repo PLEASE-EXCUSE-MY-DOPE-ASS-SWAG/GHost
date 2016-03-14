@@ -145,6 +145,7 @@ public:
     map<string, map<uint32_t, string>> m_Translations;
     map<string, uint32_t> m_AdminList;
     map<uint32_t, string> m_Aliases;
+    uint32_t m_AliasId;
 
 	CGHost( CConfig *CFG );
 	~CGHost( );

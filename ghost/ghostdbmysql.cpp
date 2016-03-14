@@ -293,14 +293,14 @@ CCallableBanList *CGHostDBMySQL :: ThreadedBanList( string server )
 	return Callable;
 }
 
-CCallableGameAdd *CGHostDBMySQL :: ThreadedGameAdd( string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver )
+CCallableGameAdd *CGHostDBMySQL :: ThreadedGameAdd( string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver , uint32_t gameid, uint32_t aliasid)
 {
 	void *Connection = GetIdleConnection( );
 
 	if( !Connection )
 		m_NumConnections++;
 
-	CCallableGameAdd *Callable = new CMySQLCallableGameAdd( server, map, gamename, ownername, duration, gamestate, creatorname, creatorserver, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
+	CCallableGameAdd *Callable = new CMySQLCallableGameAdd( server, map, gamename, ownername, duration, gamestate, creatorname, creatorserver, gameid, aliasid, Connection, m_BotID, m_Server, m_Database, m_User, m_Password, m_Port );
 	CreateThread( Callable );
 	m_OutstandingCallables++;
 	return Callable;
@@ -894,7 +894,7 @@ vector<CDBBan *> MySQLBanList( void *conn, string *error, uint32_t botid, string
 	return BanList;
 }
 
-uint32_t MySQLGameAdd( void *conn, string *error, uint32_t botid, string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver )
+uint32_t MySQLGameAdd( void *conn, string *error, uint32_t botid, string server, string map, string gamename, string ownername, uint32_t duration, uint32_t gamestate, string creatorname, string creatorserver, uint32_t gameid, uint32_t aliasid )
 {
 	uint32_t RowID = 0;
 	string EscServer = MySQLEscapeString( conn, server );
@@ -903,12 +903,10 @@ uint32_t MySQLGameAdd( void *conn, string *error, uint32_t botid, string server,
 	string EscOwnerName = MySQLEscapeString( conn, ownername );
 	string EscCreatorName = MySQLEscapeString( conn, creatorname );
 	string EscCreatorServer = MySQLEscapeString( conn, creatorserver );
-	string Query = "INSERT INTO games ( botid, server, map, datetime, gamename, ownername, duration, gamestate, creatorname, creatorserver ) VALUES ( " + UTIL_ToString( botid ) + ", '" + EscServer + "', '" + EscMap + "', NOW( ), '" + EscGameName + "', '" + EscOwnerName + "', " + UTIL_ToString( duration ) + ", " + UTIL_ToString( gamestate ) + ", '" + EscCreatorName + "', '" + EscCreatorServer + "' )";
+	string Query = "UPDATE games SET server='" + EscServer + "', map='" + EscMap + "', datetime=NOW(), gamename='" + EscGameName + "', ownername='" + EscOwnerName + "', duration='" + UTIL_ToString( duration ) + "', gamestate='" + UTIL_ToString( gamestate ) + "', creatorname='" + EscCreatorName + "', creatorserver='" + EscCreatorName + "', alias_id='" + UTIL_ToString(aliasid) + "' WHERE id='" + UTIL_ToString(gameid) + "';";
 
 	if( mysql_real_query( (MYSQL *)conn, Query.c_str( ), Query.size( ) ) != 0 )
 		*error = mysql_error( (MYSQL *)conn );
-	else
-		RowID = mysql_insert_id( (MYSQL *)conn );
 
 	return RowID;
 }
@@ -1646,7 +1644,7 @@ void CMySQLCallableGameAdd :: operator( )( )
 	Init( );
 
 	if( m_Error.empty( ) )
-		m_Result = MySQLGameAdd( m_Connection, &m_Error, m_SQLBotID, m_Server, m_Map, m_GameName, m_OwnerName, m_Duration, m_GameState, m_CreatorName, m_CreatorServer );
+		m_Result = MySQLGameAdd( m_Connection, &m_Error, m_SQLBotID, m_Server, m_Map, m_GameName, m_OwnerName, m_Duration, m_GameState, m_CreatorName, m_CreatorServer, m_GameId, m_AliasId );
 
 	Close( );
 }
