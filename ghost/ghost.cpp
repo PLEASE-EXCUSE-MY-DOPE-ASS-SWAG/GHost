@@ -1400,7 +1400,7 @@ void CGHost :: ParseConfigValues( map<string, string> configs )
             }
             m_BNetCollection[bnetNumber][iterator->first.substr(pos)] = iterator->second;
         } else if(iterator->first == "ohs_alias_id") {
-            m_AliasId = UTIL_ToUInt32(i->second);
+            m_AliasId = UTIL_ToUInt32(iterator->second);
         }
     }
     
